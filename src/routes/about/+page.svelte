@@ -71,7 +71,7 @@
 			<p>
 				TacoCat is our glorious deity: the prolific and powerful palindrome in the sky. Spelled
 				the same forwards and backwards, worshipped the same rain or shine. Every jam is held
-				in TacoCat's honor, and TacoCat loves you. 😻🌮
+				in TacoCat's honor, and TacoCat loves you.
 			</p>
 		</div>
 	</section>

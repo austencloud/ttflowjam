@@ -1,33 +1,37 @@
 <script lang="ts">
+	import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+	import { faCat, faImages, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+	import GlassCard from "$lib/components/GlassCard.svelte";
+	import Icon from "$lib/components/Icon.svelte";
 	import SectionHeading from "$lib/components/SectionHeading.svelte";
 
 	const links = [
 		{
-			emoji: "📘",
+			icon: faFacebook,
 			label: "Facebook page",
 			desc: "Announcements, weather calls, and a decade of taco lore.",
 			href: "https://www.facebook.com/flowtaco",
 		},
 		{
-			emoji: "😻",
+			icon: faCat,
 			label: "TacoCat's Circus",
 			desc: "The community group. Share your ideas for workshops, activities, and shenanigans.",
 			href: "https://www.facebook.com/groups/257085130465999/",
 		},
 		{
-			emoji: "📸",
+			icon: faInstagram,
 			label: "Instagram",
 			desc: "@flowtaco. Clips and photos from the park.",
 			href: "https://www.instagram.com/flowtaco",
 		},
 		{
-			emoji: "🖼️",
+			icon: faImages,
 			label: "Community photo album",
 			desc: "The shared Google Photos album. Add your shots from the jam!",
 			href: "https://photos.app.goo.gl/uNgZT4Zz6EBixmby7",
 		},
 		{
-			emoji: "📰",
+			icon: faNewspaper,
 			label: "Chicago Sun-Times feature",
 			desc: "The jam made the paper in 2023.",
 			href: "https://chicago.suntimes.com/2023/8/27/23814214/taco-tuesday-flow-jam-palmer-square",
@@ -48,14 +52,16 @@
 	<ul class="cards">
 		{#each links as link (link.href)}
 			<li>
-				<a class="card" href={link.href} rel="external">
-					<span class="emoji" aria-hidden="true">{link.emoji}</span>
-					<span class="text">
-						<span class="label">{link.label}</span>
-						<span class="desc">{link.desc}</span>
+				<GlassCard href={link.href}>
+					<span class="row">
+						<span class="glyph"><Icon icon={link.icon} size="1.5rem" /></span>
+						<span class="text">
+							<span class="label">{link.label}</span>
+							<span class="desc">{link.desc}</span>
+						</span>
+						<span class="arrow" aria-hidden="true">→</span>
 					</span>
-					<span class="arrow" aria-hidden="true">→</span>
-				</a>
+				</GlassCard>
 			</li>
 		{/each}
 	</ul>
@@ -83,38 +89,27 @@
 		gap: var(--spacing-md);
 	}
 
-	.card {
+	.row {
 		display: flex;
 		align-items: center;
 		gap: var(--spacing-md);
 		min-height: var(--min-touch-target);
-		padding: var(--spacing-md) var(--spacing-lg);
-		border-radius: var(--radius-lg);
-		background: var(--glass-bg);
-		border: 1px solid var(--glass-border);
-		backdrop-filter: blur(var(--glass-blur));
-		-webkit-backdrop-filter: blur(var(--glass-blur));
-		box-shadow: var(--shadow-glass);
-		color: var(--color-text-primary);
-		text-decoration: none;
-		transition:
-			transform var(--transition-fast),
-			border-color var(--transition-fast),
-			background var(--transition-fast);
 	}
 
-	.card:hover {
-		transform: translateY(var(--hover-lift));
-		border-color: var(--glass-border-hover);
-		background: var(--glass-bg-elevated);
-	}
-
-	.card:hover .arrow {
+	li:hover .arrow {
 		transform: translateX(4px);
 	}
 
-	.emoji {
-		font-size: 1.6rem;
+	.glyph {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: var(--radius-md);
+		background: oklch(0.75 0.13 75 / 0.12);
+		color: var(--color-taco-gold);
+		flex-shrink: 0;
 	}
 
 	.text {

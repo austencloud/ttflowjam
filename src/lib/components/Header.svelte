@@ -1,18 +1,29 @@
 <script lang="ts">
+	import { page } from "$app/state";
+
 	const links = [
 		{ href: "/", label: "Home" },
 		{ href: "/about", label: "About" },
+		{ href: "/gallery", label: "Gallery" },
 		{ href: "/events", label: "Other Events" },
 		{ href: "/links", label: "Links" },
 	];
+
+	const isActive = (href: string) =>
+		href === "/" ? page.url.pathname === "/" : page.url.pathname.startsWith(href);
 </script>
 
 <header>
 	<div class="bar shell">
-		<a class="brand" href="/">🌮 <span class="wordmark">Taco Tuesday Flow Jam</span></a>
+		<a class="brand" href="/">
+			<img src="/media/tacocat.png" alt="" width="30" height="30" />
+			<span class="wordmark">Taco Tuesday Flow Jam</span>
+		</a>
 		<nav aria-label="Main">
 			{#each links as link (link.href)}
-				<a href={link.href}>{link.label}</a>
+				<a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>
+					{link.label}
+				</a>
 			{/each}
 		</nav>
 	</div>
@@ -45,6 +56,11 @@
 		min-height: var(--min-touch-target);
 		font-size: 1.15rem;
 		text-decoration: none;
+	}
+
+	.brand img {
+		width: 30px;
+		height: 30px;
 	}
 
 	.wordmark {
@@ -84,5 +100,10 @@
 	nav a:hover {
 		background: var(--color-bg-card-hover);
 		color: var(--color-text-primary);
+	}
+
+	nav a[aria-current="page"] {
+		color: var(--color-text-primary);
+		background: oklch(0.75 0.13 75 / 0.12);
 	}
 </style>

@@ -2,7 +2,7 @@
 	<div class="inner shell">
 		<img src="/media/tacocat.png" alt="TacoCat, a cat tucked inside a taco" width="88" height="88" />
 		<p>Tuesdays 4ish–10ish, April–October · Palmer Square Park, Logan Square, Chicago</p>
-		<p class="blessing">Our glorious deity TacoCat welcomes you with paws wide open! 🐾</p>
+		<p class="blessing">Our glorious deity TacoCat welcomes you with paws wide open!</p>
 		<nav aria-label="Social">
 			<a href="https://www.facebook.com/flowtaco" rel="external">Facebook</a>
 			<a href="https://www.instagram.com/flowtaco" rel="external">Instagram</a>

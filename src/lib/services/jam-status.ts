@@ -35,6 +35,24 @@ function nextTuesday(from: Date, includeToday: boolean): Date {
 	return d;
 }
 
+/** Human label for how far away the next jam is. */
+export function untilJam(now: Date, next: Date): string {
+	const ms = next.getTime() - now.getTime();
+	if (ms <= 0) {
+		return "happening now";
+	}
+	const minutes = Math.round(ms / 60_000);
+	if (minutes < 60) {
+		return `in ${minutes} minute${minutes === 1 ? "" : "s"}`;
+	}
+	const hours = Math.round(minutes / 60);
+	if (hours < 24) {
+		return `in about ${hours} hour${hours === 1 ? "" : "s"}`;
+	}
+	const days = Math.round(hours / 24);
+	return `in ${days} day${days === 1 ? "" : "s"}`;
+}
+
 export function jamStatus(now: Date): JamStatus {
 	if (!inSeason(now)) {
 		const year = now.getMonth() > SEASON_LAST_MONTH ? now.getFullYear() + 1 : now.getFullYear();

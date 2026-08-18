@@ -1,22 +1,39 @@
 <script lang="ts">
-	import { jamStatus } from "$lib/services/jam-status";
+	import { jamStatus, untilJam } from "$lib/services/jam-status";
 	import GlassCard from "$lib/components/GlassCard.svelte";
 	import SectionHeading from "$lib/components/SectionHeading.svelte";
 
-	const status = jamStatus(new Date());
+	let now = $state(new Date());
 
-	const headline = {
-		"on-now": "It's ON right now! 🔥",
-		today: "It's on TONIGHT! 🌮",
-		upcoming: "Next jam:",
-		"off-season": "See you in spring! First jam:",
-	}[status.state];
-
-	const nextJamLabel = status.nextJam.toLocaleDateString("en-US", {
-		weekday: "long",
-		month: "long",
-		day: "numeric",
+	$effect(() => {
+		const tick = setInterval(() => {
+			now = new Date();
+		}, 30_000);
+		return () => clearInterval(tick);
 	});
+
+	const status = $derived(jamStatus(now));
+
+	const headline = $derived(
+		{
+			"on-now": "It's ON right now!",
+			today: "It's on TONIGHT!",
+			upcoming: "Next jam:",
+			"off-season": "See you in spring! First jam:",
+		}[status.state],
+	);
+
+	const nextJamLabel = $derived(
+		status.nextJam.toLocaleDateString("en-US", {
+			weekday: "long",
+			month: "long",
+			day: "numeric",
+		}),
+	);
+
+	const countdown = $derived(
+		status.state === "on-now" ? "flowing until 10ish" : untilJam(now, status.nextJam),
+	);
 
 	const faqs = [
 		{
@@ -29,7 +46,7 @@
 		},
 		{
 			q: "Are there tacos?",
-			a: "Sometimes! Tacos are a communal effort. There's not always tacos, but there's always flowing TacoCats and good vibes. 🌀💞✨",
+			a: "Sometimes! Tacos are a communal effort. There's not always tacos, but there's always flowing TacoCats and good vibes.",
 		},
 	];
 </script>
@@ -60,7 +77,7 @@
 		/>
 		<h1>Taco Tuesday Flow Jam</h1>
 		<p class="tagline">A weekly celebration of flow arts, food, and community. Come play!</p>
-		<div class="status-card">
+		<div class="status-card" class:on-now={status.state === "on-now"}>
 			<GlassCard elevated>
 				<p class="status">
 					{headline}
@@ -68,6 +85,7 @@
 						<strong>{nextJamLabel}</strong>
 					{/if}
 				</p>
+				<p class="countdown">{countdown}</p>
 				<p class="where">Tuesdays 4ish–10ish · Palmer Square Park, 2200 N Kedzie Blvd</p>
 			</GlassCard>
 		</div>
@@ -78,7 +96,7 @@
 	<SectionHeading kicker="The essentials" title="Frequently asked, honestly answered" />
 	<div class="faq-grid">
 		{#each faqs as faq (faq.q)}
-			<GlassCard>
+			<GlassCard interactive>
 				<h3>{faq.q}</h3>
 				<p>{faq.a}</p>
 			</GlassCard>
@@ -192,9 +210,45 @@
 		font-size: 1.35rem;
 	}
 
+	.countdown {
+		margin: var(--spacing-xs) 0 0;
+		color: var(--color-taco-gold);
+		font-weight: 650;
+	}
+
 	.where {
 		margin: var(--spacing-xs) 0 0;
 		color: var(--color-text-secondary);
+	}
+
+	.status-card.on-now {
+		border-radius: var(--radius-lg);
+		animation: on-now-pulse 3.2s ease-in-out infinite;
+	}
+
+	@keyframes on-now-pulse {
+		0%,
+		100% {
+			box-shadow: 0 0 0 0 rgb(247 179 43 / 0);
+		}
+
+		50% {
+			box-shadow: 0 0 42px 4px rgb(247 179 43 / 0.28);
+		}
+	}
+
+	@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+		.faq-grid:has(:global(.glass:hover)) :global(.glass:not(:hover)) {
+			opacity: 0.65;
+		}
+
+		.faq-grid :global(.glass) {
+			transition:
+				opacity var(--transition-normal),
+				transform var(--transition-fast),
+				border-color var(--transition-fast),
+				background var(--transition-fast);
+		}
 	}
 
 	section:not(.hero) {

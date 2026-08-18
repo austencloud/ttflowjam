@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { jamStatus } from "./jam-status";
+import { jamStatus, untilJam } from "./jam-status";
 
 // Dates are constructed in local wall-clock terms; the service is a pure
 // function of the Date it receives, so tests are timezone-stable.
@@ -40,5 +40,23 @@ describe("jamStatus", () => {
 	it("is 'off-season' in November even on a Tuesday", () => {
 		const s = jamStatus(d("2026-11-03T18:00:00")); // Tue in November
 		expect(s.state).toBe("off-season");
+	});
+});
+
+describe("untilJam", () => {
+	it("counts minutes inside the final hour", () => {
+		expect(untilJam(d("2026-08-18T15:35:00"), d("2026-08-18T16:00:00"))).toBe("in 25 minutes");
+	});
+
+	it("counts hours inside the final day", () => {
+		expect(untilJam(d("2026-08-18T09:00:00"), d("2026-08-18T16:00:00"))).toBe("in about 7 hours");
+	});
+
+	it("counts days beyond 24 hours", () => {
+		expect(untilJam(d("2026-08-19T12:00:00"), d("2026-08-25T16:00:00"))).toBe("in 6 days");
+	});
+
+	it("reports happening now when the moment has passed", () => {
+		expect(untilJam(d("2026-08-18T18:00:00"), d("2026-08-18T16:00:00"))).toBe("happening now");
 	});
 });
