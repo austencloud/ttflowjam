@@ -8,20 +8,20 @@
 			when: "Mondays 6:45–8:45 PM & Thursdays 7–9 PM",
 			where:
 				"Mon: Jefferson Park Fieldhouse, 4822 N Long Ave · Thu: Cirques Experience Gymnasium, 5944 N Magnolia Ave",
-			note: "$5 suggested donation. Closes for holidays — check before attending.",
+			note: "$5 suggested donation. Closes for holidays, so check before attending.",
 			href: "https://jugglingedge.com/club.php?ClubID=1362",
 		},
 		{
 			name: "Chicago Full Moon Jam",
 			when: "Full-moon nights, summer season",
-			where: "Foster Avenue Beach area — check their site for dates",
+			where: "Foster Avenue Beach area. Check their site for dates.",
 			note: "Fire spinning under the full moon with live drumming. A Chicago institution.",
 			href: "https://fullmoonjam.org",
 		},
 		{
 			name: "Midwest Flow Fest",
 			when: "Annually in September",
-			where: "Chicago parks — location varies by year",
+			where: "Chicago parks. Location varies by year.",
 			note: "A weekend of workshops and jams. Free to attend; workshop passes extra.",
 			href: "https://www.flowfests.com/festivals/midwest-flow-fest/",
 		},
@@ -29,7 +29,7 @@
 </script>
 
 <svelte:head>
-	<title>Other Events — Taco Tuesday Flow Jam</title>
+	<title>Other Events · Taco Tuesday Flow Jam</title>
 	<meta
 		name="description"
 		content="Other Chicago flow arts and juggling gatherings: Chicago Juggling Club, the Full Moon Jam, Midwest Flow Fest, and more."
@@ -40,7 +40,7 @@
 	<SectionHeading kicker="Beyond Tuesday" title="More flow around Chicago" />
 	<p class="lede">
 		Can't wait a whole week? Neither can we. Here's where Chicago flows on the other six days.
-		Details drift — always check the source link before trekking across town.
+		Details drift, so check the source link before trekking across town.
 	</p>
 
 	<div class="grid">

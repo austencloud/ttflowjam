@@ -3,7 +3,7 @@
 	import SectionHeading from "$lib/components/SectionHeading.svelte";
 
 	const bring = [
-		"Juggling props, hoops, poi, staffs, fans — toys of all kinds",
+		"Juggling props, hoops, poi, staffs, fans, toys of all kinds",
 		"Slacklines and yoga mats",
 		"A hungry belly (and maybe tacos to share)",
 		"Sunscreen and bug spray",
@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>About — Taco Tuesday Flow Jam</title>
+	<title>About · Taco Tuesday Flow Jam</title>
 	<meta
 		name="description"
 		content="What flow arts are, how the jam started in 2017, and why a cat in a taco is our glorious deity. Palmer Square Park, Chicago, every Tuesday in season."
@@ -24,8 +24,8 @@
 		<SectionHeading kicker="What is this?" title="Flow arts, tacos, and a park full of friends" />
 		<p class="lede">
 			Flow arts are movement play: spinning poi, dancing with hoops, juggling clubs, tossing
-			staffs, walking slacklines — any prop that gets your body and brain into that sweet
-			locked-in feeling people call <em>flow</em>. No experience needed, no audience, no
+			staffs, walking slacklines. Any prop that gets your body and brain into that sweet
+			locked-in feeling people call <em>flow</em> counts. No experience needed, no audience, no
 			pressure. Come watch, come learn, come teach. Someone will happily show you their
 			favorite trick.
 		</p>
@@ -36,13 +36,13 @@
 		<p>
 			The first ever Taco Tuesday Flow Jam happened on <strong>April 11, 2017</strong>, meeting
 			at the eagle statue by the Logan Square Blue Line. One week later the jam moved a few
-			blocks west to Palmer Square Park — in the founders' own words, for
-			<em>"more space and nicer grass!"</em> — and it never left.
+			blocks west to Palmer Square Park for, in the founders' own words,
+			<em>"more space and nicer grass!"</em> It never left.
 		</p>
 		<p>
 			It's been running every summer since: rain or shine, tacos or no tacos, now deep into
 			<strong>year nine</strong>. There's no sign-up and no organizer you're waiting on.
-			Taco Tuesday happens because <strong>you</strong> show up — your presence is the event.
+			Taco Tuesday happens because <strong>you</strong> show up. Your presence is the event.
 		</p>
 	</section>
 
@@ -54,7 +54,7 @@
 			{/each}
 		</ul>
 		<p class="ethos">
-			This is a <strong>Leave It Better</strong> event — we leave the park cleaner than we
+			This is a <strong>Leave It Better</strong> event: we leave the park cleaner than we
 			found it, every single week.
 		</p>
 	</section>
@@ -81,7 +81,7 @@
 			<h3>The fine print (there isn't much)</h3>
 			<p>
 				Free, all ages, all levels, every Tuesday April through October. Fire props only where
-				legal and safe — ask the regulars. The jam is maintained by word of mouth and the taco
+				legal and safe (ask the regulars). The jam is maintained by word of mouth and the taco
 				fund; if you eat tacos, a $5 donation keeps the griddle going.
 			</p>
 		</GlassCard>

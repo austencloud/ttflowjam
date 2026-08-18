@@ -11,19 +11,19 @@
 		{
 			emoji: "😻",
 			label: "TacoCat's Circus",
-			desc: "The community group — share ideas for workshops, activities, and shenanigans.",
+			desc: "The community group. Share your ideas for workshops, activities, and shenanigans.",
 			href: "https://www.facebook.com/groups/257085130465999/",
 		},
 		{
 			emoji: "📸",
 			label: "Instagram",
-			desc: "@flowtaco — clips and photos from the park.",
+			desc: "@flowtaco. Clips and photos from the park.",
 			href: "https://www.instagram.com/flowtaco",
 		},
 		{
 			emoji: "🖼️",
 			label: "Community photo album",
-			desc: "The shared Google Photos album — add your shots from the jam!",
+			desc: "The shared Google Photos album. Add your shots from the jam!",
 			href: "https://photos.app.goo.gl/uNgZT4Zz6EBixmby7",
 		},
 		{
@@ -36,7 +36,7 @@
 </script>
 
 <svelte:head>
-	<title>Links — Taco Tuesday Flow Jam</title>
+	<title>Links · Taco Tuesday Flow Jam</title>
 	<meta
 		name="description"
 		content="All the Taco Tuesday Flow Jam links: Facebook, Instagram, the community photo album, and the taco fund."
@@ -64,7 +64,7 @@
 		<SectionHeading kicker="Keep the griddle going" title="The taco fund" />
 		<p>
 			Tacos at the jam are a communal effort. If you flow and eat, please chip in <strong>$5</strong>
-			to the taco fund — it buys the next round of tortillas.
+			to the taco fund. It buys the next round of tortillas.
 		</p>
 		<p class="paypal">Donate via PayPal: <strong>flowtacocat@gmail.com</strong></p>
 	</section>

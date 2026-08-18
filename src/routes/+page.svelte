@@ -21,7 +21,7 @@
 	const faqs = [
 		{
 			q: "Is it happening?",
-			a: "Yes — every Tuesday until the end of time. If the weather's bad, you'll just see fewer people.",
+			a: "Yes. Every Tuesday until the end of time. If the weather's bad, you'll just see fewer people.",
 		},
 		{
 			q: "When does it start?",
@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<title>Taco Tuesday Flow Jam — Chicago</title>
+	<title>Taco Tuesday Flow Jam · Chicago</title>
 	<meta
 		name="description"
 		content="A weekly celebration of flow arts, food, and community. Tuesdays 4ish-10ish, April-October, Palmer Square Park, Chicago."
@@ -88,7 +88,7 @@
 
 <section class="shell reveal beacon">
 	<blockquote>
-		“If you show up and you're the first one there — <em>congratulations!</em> You are now the
+		“If you show up and you're the first one there, <em>congratulations!</em> You are now the
 		beacon for others to find.”
 	</blockquote>
 	<p class="beacon-note">Look for us by the totem pole, center of the park on the north side.</p>
@@ -104,7 +104,7 @@
 	<div class="duo-copy">
 		<SectionHeading kicker="New here?" title="Never flowed before? Perfect." />
 		<p>
-			Poi, hoops, staff, juggling, fans, slacklines — flow arts are for playing, not performing.
+			Poi, hoops, staff, juggling, fans, slacklines. Flow arts are for playing, not performing.
 			Someone will hand you a prop within five minutes of arriving. That's a promise and a threat.
 		</p>
 		<div class="cta-row">
