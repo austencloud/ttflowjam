@@ -32,14 +32,14 @@ The site's first job is to answer those three questions instantly, on a phone, f
 
 ### Ready-made content assets
 
-| Asset | Location | Use |
-|---|---|---|
-| Canonical info blurb ("Is the weather nice? Is it Tuesday?") | `E:\tka-platform\static\guides\level-2.pdf` p36 (also level-1 p45) | Hero/About copy, near-verbatim |
-| Embedded image on that page (`Im0.png`, 85 KB — likely TacoCat/jam art) | same PDFs, extractable via pypdf | Only local jam visual |
-| Founder bio | `E:\tka-platform\docs\grants\drafts\CC-09-artist-bio.md` | About page |
-| ~390 messages, 2015–2026 | `E:\personal-hub\message-backfill\all-messages.jsonl` + `facebook-messages.jsonl` | History timeline, FAQ, testimonials |
-| Flow-jam explainer draft | `E:\flow-arts-wiki\content\drafts\Flow_jam.wiki` | Background copy |
-| Sun-Times quotes | web research | Testimonials/press section |
+| Asset                                                                   | Location                                                                          | Use                                 |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------- |
+| Canonical info blurb ("Is the weather nice? Is it Tuesday?")            | `E:\tka-platform\static\guides\level-2.pdf` p36 (also level-1 p45)                | Hero/About copy, near-verbatim      |
+| Embedded image on that page (`Im0.png`, 85 KB — likely TacoCat/jam art) | same PDFs, extractable via pypdf                                                  | Only local jam visual               |
+| Founder bio                                                             | `E:\tka-platform\docs\grants\drafts\CC-09-artist-bio.md`                          | About page                          |
+| ~390 messages, 2015–2026                                                | `E:\personal-hub\message-backfill\all-messages.jsonl` + `facebook-messages.jsonl` | History timeline, FAQ, testimonials |
+| Flow-jam explainer draft                                                | `E:\flow-arts-wiki\content\drafts\Flow_jam.wiki`                                  | Background copy                     |
+| Sun-Times quotes                                                        | web research                                                                      | Testimonials/press section          |
 
 **Gaps that must come from outside the machine:** logo, flyers, event photos, TacoCat art. Sources: the Facebook page (needs your browser login for a scrape session) and the community Google Photos album.
 
@@ -51,50 +51,55 @@ No existing sign-up sheets, flyers, QR codes, logos, or website attempts. `E:\tt
 
 Decision principle you set: no throwaway primitives; use the canonical versions from day one.
 
-| Concern | Choice | Provenance |
-|---|---|---|
-| Framework | SvelteKit 2 + Svelte 5 (runes only), Vite, TypeScript strict | Both repos |
-| Skeleton | Copy `E:\cirque-aflame\cirque-website` structure (right-sized: SEOHead, JsonLd, FadeIn, Breadcrumbs, form actions, wrangler.toml) | cirque-website |
-| TS config | `E:\shared-packages\tsconfig.base.json` flags merged into SvelteKit shape (strict, noUncheckedIndexedAccess, verbatimModuleSyntax, …) | shared-packages |
-| Lint/format | TKA's flat `eslint.config.js` rule set + stylelint `declaration-no-important`; Prettier per TKA (the newer standard) | tka-platform |
-| Styling | Vanilla scoped CSS + design tokens; `@austencloud/theme` (tokens.css, luminance-driven theming) + one `app.css` with TTFJ brand tokens; `@layer thirdparty, base, components, overrides` | shared-packages + tka app.css |
-| Gallery viewer | `@austencloud/media-spotlight` v1.0.2 from npm (the canonical published gallery prototype — zero deps, hero animation, gestures, video) + a justified/masonry grid | shared-packages |
-| Hosting | Cloudflare Pages (`@sveltejs/adapter-cloudflare`) + one scheduled Worker for the Google Photos sync (crons need Workers, not Pages) | both repos |
-| Storage | New R2 bucket `ttfj-media` (third bucket on the same account, alongside `cirque-media` and `tka-assets`) | your ask |
-| Database | Firebase Firestore (new Firebase project `ttfj` or reuse pattern), server reads via the lightweight Firestore REST helper | both repos |
-| Auth | Firebase anonymous guest identity + optional Google upgrade (TKA's `guest-identity.ts` / `anonymous-upgrade.ts` pattern); admin routes behind `requireAdmin` | tka-platform |
-| Forms | Zod schema as contract + SvelteKit form actions + Turnstile + honeypot-as-signal | cirque-website inquiry flow |
-| Email | Brevo via plain fetch (`email.ts` pattern) | cirque-website |
-| Uploads (fallback/direct) | Hand-rolled SigV4 presigned R2 PUT (`r2.ts` + `r2-signing.ts` + presign endpoint + `connect-upload.ts`) | cirque-website |
-| Images | `generate-image-variants.mjs` (sharp, AVIF/WebP/JPEG, hard byte budgets) for static site imagery | cirque-website |
-| Tests | Vitest + jsdom + testing-library; "Earned Tests" philosophy (test signing, parsing, validation — not glue) | cirque-website/ringmaster |
-| CI | Build + check + test gate, then deploy hook (TKA's gated two-workflow pattern) | tka-platform |
-| Conventions | Copy `.claude/rules/` selections: never-hand-roll, primitive-discovery, no-checkboxes, no-layout-shift, clickables-look-like-buttons, verification-protocol; CLAUDE.md with the fire-jam writing test | both repos |
+| Concern                   | Choice                                                                                                                                                                                                | Provenance                    |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Framework                 | SvelteKit 2 + Svelte 5 (runes only), Vite, TypeScript strict                                                                                                                                          | Both repos                    |
+| Skeleton                  | Copy `E:\cirque-aflame\cirque-website` structure (right-sized: SEOHead, JsonLd, FadeIn, Breadcrumbs, form actions, wrangler.toml)                                                                     | cirque-website                |
+| TS config                 | `E:\shared-packages\tsconfig.base.json` flags merged into SvelteKit shape (strict, noUncheckedIndexedAccess, verbatimModuleSyntax, …)                                                                 | shared-packages               |
+| Lint/format               | TKA's flat `eslint.config.js` rule set + stylelint `declaration-no-important`; Prettier per TKA (the newer standard)                                                                                  | tka-platform                  |
+| Styling                   | Vanilla scoped CSS + design tokens; `@austencloud/theme` (tokens.css, luminance-driven theming) + one `app.css` with TTFJ brand tokens; `@layer thirdparty, base, components, overrides`              | shared-packages + tka app.css |
+| Gallery viewer            | `@austencloud/media-spotlight` v1.0.2 from npm (the canonical published gallery prototype — zero deps, hero animation, gestures, video) + a justified/masonry grid                                    | shared-packages               |
+| Hosting                   | Cloudflare Pages (`@sveltejs/adapter-cloudflare`) + one scheduled Worker for the Google Photos sync (crons need Workers, not Pages)                                                                   | both repos                    |
+| Storage                   | New R2 bucket `ttfj-media` (third bucket on the same account, alongside `cirque-media` and `tka-assets`)                                                                                              | your ask                      |
+| Database                  | Firebase Firestore (new Firebase project `ttfj` or reuse pattern), server reads via the lightweight Firestore REST helper                                                                             | both repos                    |
+| Auth                      | Firebase anonymous guest identity + optional Google upgrade (TKA's `guest-identity.ts` / `anonymous-upgrade.ts` pattern); admin routes behind `requireAdmin`                                          | tka-platform                  |
+| Forms                     | Zod schema as contract + SvelteKit form actions + Turnstile + honeypot-as-signal                                                                                                                      | cirque-website inquiry flow   |
+| Email                     | Brevo via plain fetch (`email.ts` pattern)                                                                                                                                                            | cirque-website                |
+| Uploads (fallback/direct) | Hand-rolled SigV4 presigned R2 PUT (`r2.ts` + `r2-signing.ts` + presign endpoint + `connect-upload.ts`)                                                                                               | cirque-website                |
+| Images                    | `generate-image-variants.mjs` (sharp, AVIF/WebP/JPEG, hard byte budgets) for static site imagery                                                                                                      | cirque-website                |
+| Tests                     | Vitest + jsdom + testing-library; "Earned Tests" philosophy (test signing, parsing, validation — not glue)                                                                                            | cirque-website/ringmaster     |
+| CI                        | Build + check + test gate, then deploy hook (TKA's gated two-workflow pattern)                                                                                                                        | tka-platform                  |
+| Conventions               | Copy `.claude/rules/` selections: never-hand-roll, primitive-discovery, no-checkboxes, no-layout-shift, clickables-look-like-buttons, verification-protocol; CLAUDE.md with the fire-jam writing test | both repos                    |
 
 New Firebase project vs. reusing an existing one is an open question (§9).
 
 ## 4. Sitemap & features
 
 ### 4.1 Home — "Is it on tonight?"
+
 - Big status answer, computed client-side + editable override: **It's Tuesday + it's jam season (April–October) → "People will be gathering this afternoon/evening."** The guidebook logic verbatim: "Is the weather nice? Is it Tuesday?" A live weather check (Open-Meteo, free, no key) can color the answer.
 - Admin override banner for cancellations/special sessions (rain-out, water-balloon day, first/last jam of season) via the announcements system.
 - Time, park map (static map image + link, no heavy embed), "what to bring," next-Tuesday countdown.
 - TacoCat greeting ("paws wide open").
 
 ### 4.2 About / What is Flow Arts
+
 - Jam story (2017–present, Sun-Times quotes, self-sustaining ethos), traditions, founder bio.
 - Flow arts explainer sourced from Flow Arts Institute + DrexFactor: props (poi, staff, hoop, fans, contact juggling, rope dart…), flow state, community culture, how to start, fire-safety norms (link Full Moon Jam's free fire-safety trainings).
 
 ### 4.3 Gallery — synced from the community Google Photos album
+
 - **Sync architecture (researched, recommended):** a scheduled Cloudflare Worker (cron, every 12–24 h) fetches the album's public share link, parses the embedded `AF_initDataCallback` data (porting `google-photos-album-image-url-fetch`; `batchexecute` pagination if the album exceeds ~500 items), diffs against `manifest.json` in R2, mirrors only new items into `ttfj-media` at `=w2048` plus thumbnail sizes, and rewrites the manifest. Alerts (email via Brevo) if a run parses zero items, so a Google format change is noticed, never silent.
 - Why: the official Google Photos API can no longer read user albums at all (post-March-2025 lockdown — app-created data only, sharing endpoints removed). Link-scrape-and-mirror is the community-standard approach; the site never depends on Google at request time, and the archive survives even if the album link dies. Contributors keep the zero-friction "add to shared album" flow they already use.
 - Frontend: justified/masonry grid → `@austencloud/media-spotlight` with hero animation, swipe, pinch-zoom, video support. Grid reads `manifest.json` from R2.
 - Optional later: a `/connect`-style direct upload page (presigned R2 PUT) for people not in the Google album.
 
 ### 4.4 Announcements
+
 - Reuse TKA's announcement model (`title, message (markdown), severity, expiresAt, actionUrl`) trimmed to community scale. Firestore-backed, admin-only writes, public reads. Critical announcements also surface as the Home status banner.
 
 ### 4.5 Voting — "jam legislation"
+
 - First real ballot: how to spend the $500 flow-toys gift card.
 - No precedent in either repo (confirmed) — this is the one genuinely new feature. Design:
   - `Poll { id, title, description (markdown), options[], opensAt, closesAt, status, resultsVisibility: 'live'|'after-close' }` and `Vote { pollId, uid, optionId(s), createdAt }` in Firestore; security rules enforce one vote per uid per poll, only while open.
@@ -103,26 +108,32 @@ New Firebase project vs. reusing an existing one is an open question (§9).
   - UI built from the button-based toggle primitives (no checkboxes, per house rules), live tally bars after voting.
 
 ### 4.6 Classes
+
 - Two flows, both zod + form actions + Turnstile:
   - **Teach:** propose a class/workshop (prop, level, description, preferred dates) → moderation queue (TKA's festival-submission moderation pattern) → approved classes appear on the schedule.
   - **Attend:** RSVP to a listed class using TKA's attendance schema (`status: 'interested'|'going'`, `role: 'attendee'|'instructor'`).
 - Facilitated by you and the co-facilitator (admin role approves proposals).
 
 ### 4.7 Taco potluck sign-up
+
 - Per-Tuesday sign-up: "I'm bringing ___" (tortillas, fillings, salsa, chips, drinks, napkins/plates…). Shows what's covered and what's missing for the next jam. Auto-rolls to next Tuesday; anonymous-identity claims so people can un-claim their own item.
 
 ### 4.8 Other Chicago events
+
 - Curated cards from research: Chicago Juggling Club (Mon 6:45–8:45 PM Jefferson Park Fieldhouse; Thu 7–9 PM Cirques Experience Gym — times to re-verify), Chicago Full Moon Jam (+ its free fire-safety trainings), Flow Fest Chicago (Aug 29, 2026, Ping Tom Park), Aloft open gym, hoop jams, Lakes of Fire, Kinetic Fire, Midwest Fire Fest. Stored in Firestore so they're editable without a deploy.
 
 ### 4.9 Links
+
 - The linktree superset: Facebook page, Instagram (once confirmed), Google Photos album, press articles, prop retailers (Home of Poi, Sacred Flow Art, etc.), this site's sibling pages.
 
 ### 4.10 History (stretch, cheap to add later)
+
 - Timeline mined from the message corpus: 2017 first jams → Sun-Times feature → traditions. Good SEO and genuinely charming.
 
 ## 5. Facebook page harvest (interactive phase — needs you)
 
 No Facebook events/pages/posts export exists locally (the archive has messages only). Plan:
+
 1. You log into Facebook in the browser session (Claude in Chrome or DevTools MCP — your call at the time).
 2. I page through facebook.com/flowtaco posts, collecting: page profile/cover art (the closest thing to a logo), post photos worth keeping, event history (dates/titles), and any recurring copy.
 3. Downloads land in a local `harvest/facebook/` folder with a manifest (post date, caption, URL) for curation before anything is published; selected items get uploaded to R2.

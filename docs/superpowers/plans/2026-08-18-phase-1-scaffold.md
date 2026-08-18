@@ -15,6 +15,7 @@
 ### Task 1: SvelteKit skeleton
 
 **Files:**
+
 - Create: `package.json`, `svelte.config.js`, `vite.config.ts`, `tsconfig.json`, `.nvmrc`, `.npmrc`
 - Create: `src/app.html`, `src/app.d.ts`, `src/routes/+layout.svelte`, `src/routes/+page.svelte`
 - Create: `static/robots.txt`
@@ -187,8 +188,7 @@ export {};
 - [ ] **Step 9: Write placeholder `src/routes/+page.svelte`**
 
 ```svelte
-<h1>Taco Tuesday Flow Jam</h1>
-<p>Chicago's weekly celebration of flow arts, food, and community.</p>
+<h1>Taco Tuesday Flow Jam</h1><p>Chicago's weekly celebration of flow arts, food, and community.</p>
 ```
 
 - [ ] **Step 10: Write `static/robots.txt`**
@@ -215,6 +215,7 @@ git commit -m "feat: scaffold SvelteKit 2 + Svelte 5 app with strict TypeScript"
 ### Task 2: Lint/format tooling
 
 **Files:**
+
 - Create: `eslint.config.js`, `.prettierrc`, `.prettierignore`, `stylelint.config.js`
 
 - [ ] **Step 1: Write `eslint.config.js`** (flat config; ringmaster rule set modernized; `.svelte` files covered by svelte-check, not ESLint — TKA pattern)
@@ -306,6 +307,7 @@ git commit -m "feat: add eslint, prettier, and stylelint tooling"
 ### Task 3: Design tokens (`src/app.css`)
 
 **Files:**
+
 - Create: `src/app.css`, `static/favicon.svg`
 
 TTFJ brand: taco gold + salsa red + guac green on a dusk-park navy, permanently dark (house doctrine: never write light/dark variant pairs). Token structure mirrors `E:\cirque-aflame\cirque-website\src\app.css`.
@@ -439,6 +441,7 @@ git commit -m "feat: TTFJ design tokens and base styles"
 ### Task 4: Jam status service (TDD)
 
 **Files:**
+
 - Create: `src/lib/services/jam-status.ts`
 - Test: `src/lib/services/jam-status.test.ts`
 
@@ -535,11 +538,12 @@ function nextTuesdayOnOrAfter(date: Date): Date {
 }
 
 function firstTuesdayOfNextSeason(date: Date): Date {
-	const year = date.getMonth() > SEASON_END_MONTH || !inSeason(date)
-		? date.getMonth() <= SEASON_START_MONTH
-			? date.getFullYear()
-			: date.getFullYear() + 1
-		: date.getFullYear();
+	const year =
+		date.getMonth() > SEASON_END_MONTH || !inSeason(date)
+			? date.getMonth() <= SEASON_START_MONTH
+				? date.getFullYear()
+				: date.getFullYear() + 1
+			: date.getFullYear();
 	return nextTuesdayOnOrAfter(new Date(year, SEASON_START_MONTH, 1));
 }
 
@@ -584,6 +588,7 @@ git commit -m "feat: jam status service — is it on tonight?"
 ### Task 5: Base layout + shell pages
 
 **Files:**
+
 - Create: `src/lib/components/Header.svelte`, `src/lib/components/Footer.svelte`
 - Modify: `src/routes/+layout.svelte`, `src/routes/+page.svelte`
 
@@ -648,7 +653,9 @@ git commit -m "feat: jam status service — is it on tonight?"
 		border-radius: var(--radius-full);
 		color: var(--color-text-secondary);
 		text-decoration: none;
-		transition: background var(--transition-fast), color var(--transition-fast);
+		transition:
+			background var(--transition-fast),
+			color var(--transition-fast);
 	}
 
 	nav a:hover {
@@ -662,9 +669,7 @@ git commit -m "feat: jam status service — is it on tonight?"
 
 ```svelte
 <footer>
-	<p>
-		Tuesdays 4ish–10ish, April–October · Palmer Square Park, Logan Square, Chicago
-	</p>
+	<p>Tuesdays 4ish–10ish, April–October · Palmer Square Park, Logan Square, Chicago</p>
 	<p class="blessing">Our glorious deity TacoCat welcomes you with paws wide open! 🐾</p>
 	<nav aria-label="Social">
 		<a href="https://www.facebook.com/flowtaco" rel="external">Facebook</a>
@@ -809,7 +814,7 @@ git commit -m "feat: jam status service — is it on tonight?"
 ```
 
 - [ ] **Step 5: Verify** — Run: `npm run check && npm test && npm run build`
-Expected: all pass, build emits `.svelte-kit/cloudflare`.
+      Expected: all pass, build emits `.svelte-kit/cloudflare`.
 
 - [ ] **Step 6: Commit**
 
@@ -823,6 +828,7 @@ git commit -m "feat: base layout, header/footer, and live jam-status homepage"
 ### Task 6: Cloudflare Pages deploy + CI
 
 **Files:**
+
 - Create: `wrangler.toml`, `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Write `wrangler.toml`**
@@ -839,15 +845,17 @@ compatibility_flags = ["nodejs_compat"]
 - [ ] **Step 2: Create the Pages project and deploy**
 
 Run:
+
 ```bash
 npx wrangler pages project create ttflowjam --production-branch=main
 npm run build
 npx wrangler pages deploy .svelte-kit/cloudflare --project-name=ttflowjam --branch=main --commit-dirty=true
 ```
+
 Expected: a live `https://ttflowjam.pages.dev` URL. If wrangler is not authenticated, run `npx wrangler login` (user completes the OAuth prompt in the browser).
 
 - [ ] **Step 3: Verify the deploy** — `curl -s https://ttflowjam.pages.dev | grep -o "<title>[^<]*"`
-Expected: `<title>Taco Tuesday Flow Jam — Chicago`
+      Expected: `<title>Taco Tuesday Flow Jam — Chicago`
 
 - [ ] **Step 4: Write `.github/workflows/ci.yml`** (gate quality on every push; deploys stay manual/wrangler for now — the TKA two-workflow deploy-hook gate arrives when the site has users)
 
@@ -882,6 +890,7 @@ git commit -m "feat: Cloudflare Pages deploy and CI quality gate"
 git push
 gh run watch --exit-status
 ```
+
 Expected: CI run passes.
 
 ---
@@ -889,6 +898,7 @@ Expected: CI run passes.
 ### Task 7: Project conventions (CLAUDE.md + rules)
 
 **Files:**
+
 - Create: `CLAUDE.md`, `.claude/rules/styling.md`, `.claude/rules/code-style.md`, `.claude/rules/never-hand-roll.md`
 
 - [ ] **Step 1: Write `CLAUDE.md`**
@@ -946,6 +956,7 @@ strict TypeScript, Cloudflare Pages, vanilla scoped CSS over tokens in `src/app.
 # Never Hand-Roll (One Concept, One Owner)
 
 Before building any shared-feeling behavior:
+
 1. Grep this repo and check `@austencloud/*` packages (media-spotlight, theme, media-manager, image-loader, drawer, sidebar, chip-toggle) for an existing owner — search at least 3 synonym terms.
 2. Declare the outcome in your report: **Reuse / Extend / Compose / Create**.
 3. A second parallel implementation of an owned concept is forbidden; a third is a defect.
