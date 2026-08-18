@@ -1,0 +1,4 @@
+name = "ttflowjam"
+pages_build_output_dir = ".svelte-kit/cloudflare"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
