@@ -6,7 +6,7 @@ Media files are gitignored (repo is public); manifests and notes are committed.
 | Folder | Source | Status |
 |---|---|---|
 | `google-photos/` | Community shared album `https://photos.app.goo.gl/uNgZT4Zz6EBixmby7` ("Taco Tuesday Flow Jam! 🤹🔥🌮", ~350 items) mirrored at `=w2048` + `manifest.json` | Mirrored 2026-08-18 |
-| `facebook/` | Full page data export (JSON, high media quality, all time) for facebook.com/flowtaco — requested 2026-08-18 via Download Page Information while acting as the Page; download the zip from facebook.com/dyi → "Available files" (requires switching into the Page profile) when Facebook finishes preparing it | Export requested, awaiting file |
+| `facebook/` | Full page data export (JSON, high media quality, all time) for facebook.com/flowtaco — unzipped from `facebook-flowtaco-2026-08-18-AXOtdP4Y.zip`. 287 MB, 598 files: 113 posts (2017-04-10 → 2026-08-05), 13 hosted events, albums "Tacos and Flow!" (151 photos), "Photos" (58), "Mobile uploads" (31), "Family Photos" (31), "Cover photos" (17), "Profile pictures" (5), 30 videos, follower list, page profile info, and page Messenger threads. Note: export JSON strings are mojibake-encoded — decode with `s.encode('latin-1').decode('utf-8')` | Ingested 2026-08-18 |
 | `pdf-assets/` | Images extracted from the TKA guidebook PDFs (`Im0.png` = TacoCat cat-in-a-taco illustration from level-2.pdf p36) | Done |
 
 ## Facts captured from the live Facebook page (2026-08-18)

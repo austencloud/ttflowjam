@@ -2,3 +2,5 @@ harvest/**/images/
 harvest/**/*.jpg
 harvest/**/*.png
 harvest/**/*.mp4
+harvest/facebook/*/
+harvest/google-photos/*.jpg
