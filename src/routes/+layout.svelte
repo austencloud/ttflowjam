@@ -1,4 +1,7 @@
 <script lang="ts">
+	import "@fontsource-variable/inter";
+	import "@fontsource-variable/fraunces/full.css";
+	import "@fontsource-variable/fraunces/full-italic.css";
 	import "../app.css";
 	import type { Snippet } from "svelte";
 	import Header from "$lib/components/Header.svelte";
@@ -19,9 +22,6 @@
 
 <style>
 	main {
-		max-width: 72rem;
-		margin: 0 auto;
-		padding: var(--spacing-lg);
 		min-height: 60vh;
 	}
 </style>
