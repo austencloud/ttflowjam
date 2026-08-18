@@ -154,18 +154,18 @@ Each phase gets its own implementation plan (superpowers writing-plans) and land
 
 1. **Domain:** `tacotuesdayflowjam.com` canonical + `ttflowjam.com` redirect.
 2. **Canonical name:** "Taco Tuesday Flow Jam" (singular).
-3. **Jam time:** publish the fuzzy window — "people gather from mid-afternoon; liveliest around 6 PM until sunset."
+3. **Jam time:** the page's own current flyer says **"Every Tuesday, 4ish–10ish, Palmer Square Park"** — the site uses "4ish–10ish" (supersedes the fuzzy-window guess; discovered during the Facebook harvest 2026-08-18).
 4. **Backend:** new dedicated Firebase project, Firestore + anonymous auth with optional Google upgrade.
-5. **TacoCat:** full mascot treatment. Art doesn't exist yet ("a few steps away") — ship TacoCat copy now, design art slots so imagery drops in later without layout changes.
+5. **TacoCat:** full mascot treatment. Two pieces of existing art found 2026-08-18: the illustration embedded in the TKA guide PDFs (cat-in-a-taco holding a "Taco Tuesday Flow Jams" sign — extracted to `harvest/pdf-assets/Im0.png`) and the Facebook page's red "TACO CAT" badge profile picture (in the incoming page export). Austen may still want new/refined art later.
 6. **Instagram:** @flowtaco is Austen's and active — link it.
 7. **After-party fire jam:** entirely off the public site. No mention, no address.
 8. **Repo:** `E:\ttflowjam`, pushed public to GitHub under `austencloud`.
 9. **Jam age:** year 9 (started ~2017) — the site's history copy uses this, not the message-archive span.
 
-## 10. Still open
+## 10. Later decisions and follow-ups
 
-1. **Google Photos album share link** — Austen pastes when ready; gallery sync Worker needs it.
-2. **Gift-card poll:** candidate options for the $500 flow-toys ballot (which shop? which props on the ballot?).
-3. **Co-facilitator:** name/role for the Classes admin flow and About page.
+1. **Google Photos album:** share link provided 2026-08-18: `https://photos.app.goo.gl/uNgZT4Zz6EBixmby7` (kept out of site copy until launch decision; the sync Worker consumes it).
+2. **Gift-card poll:** ballot contents decided later — voting feature ships with a placeholder poll.
+3. **Co-facilitator:** Indigo — named on About, Classes admin.
 4. **TacoCat art:** source/commission plan (the guide-PDF embedded image should be extracted and reviewed as a starting point).
-5. **Facebook harvest session:** schedule a browser session with Austen logged in.
+5. **Facebook harvest:** in progress — full page history into `harvest/facebook/` (gitignored media + manifest), the canonical reference pile at `E:\ttflowjam\harvest\`.

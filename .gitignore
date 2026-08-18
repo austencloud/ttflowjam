@@ -1,0 +1,4 @@
+harvest/**/images/
+harvest/**/*.jpg
+harvest/**/*.png
+harvest/**/*.mp4
