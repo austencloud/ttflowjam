@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+	import { faFacebook, faInstagram, faPaypal } from "@fortawesome/free-brands-svg-icons";
 	import { faCat, faImages, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 	import GlassCard from "$lib/components/GlassCard.svelte";
 	import Icon from "$lib/components/Icon.svelte";
@@ -37,6 +37,15 @@
 			href: "https://chicago.suntimes.com/2023/8/27/23814214/taco-tuesday-flow-jam-palmer-square",
 		},
 	];
+
+	// Add Venmo here (icon: faVenmo, from free-brands) once the handle exists.
+	const fundLinks = [
+		{
+			icon: faPaypal,
+			label: "PayPal",
+			href: "https://paypal.me/flowtaco",
+		},
+	];
 </script>
 
 <svelte:head>
@@ -72,7 +81,16 @@
 			Tacos at the jam are a communal effort. If you flow and eat, please chip in <strong>$5</strong>
 			to the taco fund. It buys the next round of tortillas.
 		</p>
-		<p class="paypal">Donate via PayPal: <strong>flowtacocat@gmail.com</strong></p>
+		<ul class="fund-links">
+			{#each fundLinks as fund (fund.href)}
+				<li>
+					<a class="donate" href={fund.href} rel="external">
+						<Icon icon={fund.icon} size="1.25rem" />
+						<span>Chip in with {fund.label}</span>
+					</a>
+				</li>
+			{/each}
+		</ul>
 	</section>
 </div>
 
@@ -141,7 +159,35 @@
 		max-width: 60ch;
 	}
 
-	.paypal {
-		font-size: var(--text-lede);
+	.fund-links {
+		list-style: none;
+		margin: var(--spacing-lg) 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacing-md);
+	}
+
+	.donate {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--spacing-sm);
+		min-height: var(--min-touch-target);
+		padding: 0 var(--spacing-lg);
+		border-radius: var(--radius-full);
+		border: 1px solid transparent;
+		background: var(--color-taco-gold);
+		color: var(--color-bg-primary);
+		font-weight: 650;
+		text-decoration: none;
+		transition:
+			transform var(--transition-fast),
+			box-shadow var(--transition-fast);
+	}
+
+	.donate:hover {
+		transform: translateY(var(--hover-lift));
+		box-shadow: var(--shadow-glow);
 	}
 </style>
