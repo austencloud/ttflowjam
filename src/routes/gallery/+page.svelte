@@ -98,13 +98,36 @@
 		text-decoration-color: var(--color-taco-gold);
 	}
 
+	/* Column counts are pinned per tier rather than auto-filled. The previous
+	   `minmax(min(11rem, 44vw), 1fr)` floor measured the viewport, but the grid
+	   only owns ~79% of it, so two 44vw tracks missed fitting by a single
+	   gutter and the whole gallery collapsed to one column on a phone:
+	   217 rows, 67,167px of document, 100 screens of scroll. */
 	.grid {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(11rem, 44vw), 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--spacing-sm);
+	}
+
+	@media (min-width: 30rem) {
+		.grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 45rem) {
+		.grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.grid {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
 	}
 
 	.cell {
