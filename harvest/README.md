@@ -14,7 +14,7 @@ Media files are gitignored (repo is public); manifests and notes are committed.
 - Page name: **Taco Tuesday Flow Jams Chicago**, handle @flowtaco, 1.4K followers, category "Sports & recreation"
 - Bio: "Taco Tuesday Flow Jam is a weekly celebration of flow arts, food, and community. Come play!"
 - Current flyer: **"Every Tuesday — Taco Tuesday Flow Jam — 4ish–10ish, Palmer Square Park"**
-- Second flyer: "Tacos @ Taco Tuesday! July 28, Aug 11, Aug 25, Sept 8" (biweekly taco dates, 2025 season)
+- Second flyer: "Tacos @ Taco Tuesday! July 28, Aug 11, Aug 25, Sept 8" (biweekly taco dates, **2026** season — those four dates are Tuesdays in 2026, not 2025; the source post is timestamped 2026-07-26 and adds "Tacos start at 6ish and go until we run out")
 - Profile picture: red circular "TACO CAT" badge art (mascot). Cover photo: large group shot with LED props at dusk
 - Recent posts are cross-published from Instagram ("Published by Instagram" byline), often tagged at Palmer Square Park with collaborators (e.g. Kyle Ford, Martyna Macie)
 - Location listed: Palmer Square
