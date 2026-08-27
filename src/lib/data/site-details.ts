@@ -10,7 +10,7 @@ export const siteDetails = {
 	albumUrl: "https://photos.app.goo.gl/uNgZT4Zz6EBixmby7",
 	pressUrl: "https://chicago.suntimes.com/2023/8/27/23814214/taco-tuesday-flow-jam-palmer-square",
 	paypalUrl: "https://paypal.me/flowtaco",
-	canonicalUrl: "https://ttflowjam.pages.dev",
+	canonicalUrl: "https://ttflowjam.com",
 } as const;
 
 export const tacoNights2026 = [

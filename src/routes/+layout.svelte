@@ -22,7 +22,7 @@
 			"@context": "https://schema.org",
 			"@type": "Organization",
 			"name": "Taco Tuesday Flow Jam",
-			"url": "https://ttflowjam.pages.dev",
+			"url": "https://ttflowjam.com",
 			"description": "A free weekly flow arts gathering at Palmer Square Park in Chicago, Tuesdays April through October.",
 			"sameAs": [
 				"https://www.facebook.com/flowtaco",
