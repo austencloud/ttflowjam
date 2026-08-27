@@ -1,62 +1,41 @@
 import { describe, expect, it } from "vitest";
-import { jamStatus, untilJam } from "./jam-status";
-
-// Dates are constructed in local wall-clock terms; the service is a pure
-// function of the Date it receives, so tests are timezone-stable.
-const d = (iso: string) => new Date(iso);
+import { civilDateToIso, formatJamDate, jamStatus } from "./jam-status";
 
 describe("jamStatus", () => {
-	it("is 'on-now' during a Tuesday evening in season", () => {
-		const s = jamStatus(d("2026-08-18T18:00:00")); // Tue, August, 6 PM
-		expect(s.state).toBe("on-now");
+	it("uses Chicago Tuesday even after UTC has crossed into Wednesday", () => {
+		const status = jamStatus(new Date("2026-08-19T02:00:00Z"));
+		expect(status.state).toBe("today");
+		expect(civilDateToIso(status.nextJam)).toBe("2026-08-18");
 	});
 
-	it("is 'today' on a Tuesday morning in season", () => {
-		const s = jamStatus(d("2026-08-18T09:00:00"));
-		expect(s.state).toBe("today");
+	it("moves to the next Tuesday after the jam window closes in Chicago", () => {
+		const status = jamStatus(new Date("2026-08-19T03:01:00Z"));
+		expect(status.state).toBe("upcoming");
+		expect(civilDateToIso(status.nextJam)).toBe("2026-08-25");
 	});
 
-	it("is 'upcoming' on a Wednesday in season, pointing at next Tuesday", () => {
-		const s = jamStatus(d("2026-08-19T12:00:00")); // Wed
-		expect(s.state).toBe("upcoming");
-		expect(s.nextJam.getDay()).toBe(2);
-		expect(s.nextJam.getDate()).toBe(25);
+	it("finds the first Tuesday in April before the season starts", () => {
+		const status = jamStatus(new Date("2026-01-10T18:00:00Z"));
+		expect(status.state).toBe("off-season");
+		expect(civilDateToIso(status.nextJam)).toBe("2026-04-07");
 	});
 
-	it("is 'off-season' in January and points at the first Tuesday of April", () => {
-		const s = jamStatus(d("2026-01-10T12:00:00"));
-		expect(s.state).toBe("off-season");
-		expect(s.nextJam.getMonth()).toBe(3); // April
-		expect(s.nextJam.getDay()).toBe(2);
-		expect(s.nextJam.getDate()).toBeLessThanOrEqual(7);
+	it("rolls a finished season into the following April", () => {
+		const status = jamStatus(new Date("2026-11-03T18:00:00Z"));
+		expect(status.state).toBe("off-season");
+		expect(civilDateToIso(status.nextJam)).toBe("2027-04-06");
 	});
 
-	it("treats a Tuesday after 10 PM as 'upcoming' (tonight's jam is over)", () => {
-		const s = jamStatus(d("2026-08-18T23:00:00"));
-		expect(s.state).toBe("upcoming");
-		expect(s.nextJam.getDate()).toBe(25);
-	});
-
-	it("is 'off-season' in November even on a Tuesday", () => {
-		const s = jamStatus(d("2026-11-03T18:00:00")); // Tue in November
-		expect(s.state).toBe("off-season");
+	it("rolls the final Tuesday night into the following season", () => {
+		const status = jamStatus(new Date("2026-10-28T03:01:00Z"));
+		expect(status.state).toBe("off-season");
+		expect(civilDateToIso(status.nextJam)).toBe("2027-04-06");
 	});
 });
 
-describe("untilJam", () => {
-	it("counts minutes inside the final hour", () => {
-		expect(untilJam(d("2026-08-18T15:35:00"), d("2026-08-18T16:00:00"))).toBe("in 25 minutes");
-	});
-
-	it("counts hours inside the final day", () => {
-		expect(untilJam(d("2026-08-18T09:00:00"), d("2026-08-18T16:00:00"))).toBe("in about 7 hours");
-	});
-
-	it("counts days beyond 24 hours", () => {
-		expect(untilJam(d("2026-08-19T12:00:00"), d("2026-08-25T16:00:00"))).toBe("in 6 days");
-	});
-
-	it("reports happening now when the moment has passed", () => {
-		expect(untilJam(d("2026-08-18T18:00:00"), d("2026-08-18T16:00:00"))).toBe("happening now");
+describe("formatJamDate", () => {
+	it("formats date-only values without leaking the machine timezone", () => {
+		expect(formatJamDate({ year: 2026, month: 9, day: 1 })).toBe("Tuesday, September 1");
+		expect(formatJamDate({ year: 2026, month: 9, day: 1 }, "short")).toBe("Tue, Sep 1");
 	});
 });

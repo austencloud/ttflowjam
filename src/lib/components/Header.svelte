@@ -1,109 +1,165 @@
 <script lang="ts">
 	import { page } from "$app/state";
+	import { formatJamDate, jamStatus } from "$lib/services/jam-status";
 
 	const links = [
-		{ href: "/", label: "Home" },
-		{ href: "/about", label: "About" },
+		{ href: "/", label: "Tonight" },
+		{ href: "/first-time", label: "First time" },
 		{ href: "/gallery", label: "Gallery" },
-		{ href: "/events", label: "Other Events" },
-		{ href: "/links", label: "Links" },
+		{ href: "/story", label: "Story" },
+		{ href: "/tacos", label: "Tacos" },
 	];
 
+	const status = jamStatus(new Date());
+	const dateLabel = status.state === "today" ? "Tonight" : formatJamDate(status.nextJam, "short");
 	const isActive = (href: string) =>
 		href === "/" ? page.url.pathname === "/" : page.url.pathname.startsWith(href);
 </script>
 
+<a class="skip" href="#content">Skip to the page</a>
+
 <header>
-	<div class="bar shell">
-		<a class="brand" href="/">
-			<img src="/media/tacocat.png" alt="" width="30" height="30" />
-			<span class="wordmark">Taco Tuesday Flow Jam</span>
+	<div class="top">
+		<a class="brand" href="/" aria-label="Taco Tuesday Flow Jam home">Taco Tuesday</a>
+		<a class="status" href="/#jam-status">
+			<span class="signal" aria-hidden="true"></span>
+			<strong>No call</strong>
+			<b>{dateLabel}</b>
+			<span class="sr-only">Weather call not posted. {dateLabel} is the calendar forecast.</span>
 		</a>
-		<nav aria-label="Main">
-			{#each links as link (link.href)}
-				<a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>
-					{link.label}
-				</a>
-			{/each}
-		</nav>
 	</div>
+	<nav aria-label="Main navigation">
+		<div>
+			{#each links as link (link.href)}
+				<a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>{link.label}</a>
+			{/each}
+		</div>
+	</nav>
 </header>
 
 <style>
+	.skip {
+		position: fixed;
+		top: var(--space-3);
+		left: var(--space-3);
+		z-index: calc(var(--z-header) + 1);
+		min-height: var(--min-touch-target);
+		padding: var(--space-3) var(--space-4);
+		background: var(--color-paper);
+		color: var(--color-paper-ink);
+		font-weight: 800;
+		transform: translateY(calc((var(--header-offset) + var(--space-4)) * -1));
+	}
+
+	.skip:focus-visible {
+		transform: translateY(0);
+	}
+
 	header {
 		position: sticky;
 		top: 0;
 		z-index: var(--z-header);
-		background: oklch(0.15 0.02 270 / 0.72);
-		backdrop-filter: blur(16px) saturate(160%);
-		-webkit-backdrop-filter: blur(16px) saturate(160%);
-		border-bottom: 1px solid oklch(0.6 0.03 270 / 0.08);
+		border-bottom: var(--border-thin) solid var(--color-line);
+		background: var(--color-night);
 	}
 
-	.bar {
+	.top,
+	nav > div {
+		width: var(--shell-width);
+		margin-inline: auto;
+	}
+
+	.top {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--spacing-sm);
-		padding-block: var(--spacing-xs);
+		gap: var(--space-3);
+		min-height: var(--min-touch-target);
+	}
+
+	.brand,
+	.status,
+	nav a {
+		font-size: var(--text-small);
+		font-weight: 820;
+		letter-spacing: var(--tracking-label);
+		line-height: 1;
+		text-decoration: none;
+		text-transform: uppercase;
 	}
 
 	.brand {
+		min-width: 0;
+		overflow: hidden;
+		color: var(--color-text);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.status {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--spacing-sm);
+		gap: var(--space-2);
 		min-height: var(--min-touch-target);
-		font-size: 1.15rem;
-		text-decoration: none;
+		color: var(--color-text-soft);
+		white-space: nowrap;
 	}
 
-	.brand img {
-		width: 30px;
-		height: 30px;
+	.status .signal {
+		width: var(--space-3);
+		height: var(--space-3);
+		border: var(--border-medium) solid var(--color-text);
+		border-radius: var(--radius-round);
+		background: var(--color-red);
 	}
 
-	.wordmark {
-		font-family: var(--font-display);
-		font-style: italic;
-		font-weight: 700;
-		font-variation-settings:
-			"opsz" 144,
-			"SOFT" 0,
-			"WONK" 1;
-		letter-spacing: 0.02em;
-		background: var(--gradient-fiesta);
-		background-clip: text;
-		-webkit-background-clip: text;
-		color: transparent;
+	.sr-only {
+		position: absolute;
+		width: var(--border-thin);
+		height: var(--border-thin);
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.status strong {
+		color: var(--color-red);
+	}
+
+	.status b {
+		color: var(--color-gold);
 	}
 
 	nav {
+		border-top: var(--border-thin) solid var(--color-line-soft);
+	}
+
+	nav > div {
 		display: flex;
-		flex-wrap: wrap;
-		gap: var(--spacing-xs);
+		overflow-x: auto;
+		scrollbar-width: thin;
 	}
 
 	nav a {
 		display: inline-flex;
+		flex: 0 0 auto;
 		align-items: center;
 		min-height: var(--min-touch-target);
-		padding: 0 var(--spacing-md);
-		border-radius: var(--radius-full);
-		color: var(--color-text-secondary);
-		text-decoration: none;
+		padding-inline: var(--space-4);
+		border-right: var(--border-thin) solid var(--color-line-soft);
+		color: var(--color-text-soft);
 		transition:
-			background var(--transition-fast),
-			color var(--transition-fast);
+			background var(--duration-fast) var(--ease-out),
+			color var(--duration-fast) var(--ease-out);
 	}
 
-	nav a:hover {
-		background: var(--color-bg-card-hover);
-		color: var(--color-text-primary);
+	nav a:first-child {
+		border-left: var(--border-thin) solid var(--color-line-soft);
 	}
 
+	nav a:hover,
 	nav a[aria-current="page"] {
-		color: var(--color-text-primary);
-		background: oklch(0.75 0.13 75 / 0.12);
+		background: var(--color-paper);
+		color: var(--color-paper-ink);
 	}
 </style>

@@ -1,49 +1,83 @@
+<script lang="ts">
+	import { siteDetails } from "$lib/data/site-details";
+</script>
+
 <footer>
-	<div class="inner shell">
-		<img src="/media/tacocat.png" alt="TacoCat, a cat tucked inside a taco" width="88" height="88" />
-		<p>Tuesdays 4ish–10ish, April–October · Palmer Square Park, Logan Square, Chicago</p>
-		<p class="blessing">Our glorious deity TacoCat welcomes you with paws wide open!</p>
-		<nav aria-label="Social">
-			<a href="https://www.facebook.com/flowtaco" rel="external">Facebook</a>
-			<a href="https://www.instagram.com/flowtaco" rel="external">Instagram</a>
-			<a href="https://photos.app.goo.gl/uNgZT4Zz6EBixmby7" rel="external">Photos</a>
+	<div class="inner">
+		<div>
+			<p class="brand">Taco Tuesday Flow Jam</p>
+			<p>{siteDetails.schedule}</p>
+			<p>{siteDetails.location}</p>
+		</div>
+		<nav aria-label="Community links">
+			<a href={siteDetails.facebookUrl} rel="external">Facebook</a>
+			<a href={siteDetails.instagramUrl} rel="external">Instagram</a>
+			<a href={siteDetails.albumUrl} rel="external">Community album</a>
+			<a href="/chicago-flow">More Chicago flow</a>
 		</nav>
 	</div>
+	<p class="honesty">Weather calls live on Facebook. This site does not guess.</p>
 </footer>
 
 <style>
 	footer {
-		margin-top: var(--spacing-2xl);
-		padding: var(--spacing-xl) 0;
-		background: oklch(0.14 0.018 270 / 0.7);
-		border-top: 1px solid oklch(0.6 0.03 270 / 0.08);
-		text-align: center;
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-min);
+		margin-top: var(--space-8);
+		padding-block: var(--space-7);
+		border-top: var(--border-heavy) solid var(--color-paper);
+		background: var(--color-night-raised);
+		color: var(--color-text-soft);
+		font-size: var(--text-small);
 	}
 
-	img {
-		width: 88px;
-		height: 88px;
-		margin-bottom: var(--spacing-sm);
+	.inner,
+	.honesty {
+		width: var(--shell-width);
+		margin-inline: auto;
 	}
 
-	.blessing {
-		color: var(--color-text-muted);
+	.inner {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--card-min), 1fr));
+		gap: var(--space-6);
+	}
+
+	.brand {
+		color: var(--color-text);
+		font-size: var(--text-card-title);
+		font-weight: 850;
+		letter-spacing: var(--tracking-tight);
+	}
+
+	p {
+		margin-bottom: var(--space-2);
 	}
 
 	nav {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: center;
-		gap: var(--spacing-sm);
+		align-content: start;
+		justify-content: flex-end;
+		gap: var(--space-2) var(--space-5);
 	}
 
 	nav a {
 		display: inline-flex;
 		align-items: center;
 		min-height: var(--min-touch-target);
-		padding: 0 var(--spacing-md);
-		color: var(--color-taco-gold);
+		color: var(--color-gold);
+		font-weight: 750;
+		text-underline-offset: var(--space-1);
+	}
+
+	nav a:hover {
+		color: var(--color-text);
+	}
+
+	.honesty {
+		margin-top: var(--space-6);
+		margin-bottom: 0;
+		padding-top: var(--space-4);
+		border-top: var(--border-thin) solid var(--color-line);
+		color: var(--color-text-muted);
 	}
 </style>

@@ -1,361 +1,341 @@
 <script lang="ts">
-	import { jamStatus, untilJam } from "$lib/services/jam-status";
-	import GlassCard from "$lib/components/GlassCard.svelte";
+	import ActionLink from "$lib/components/ActionLink.svelte";
+	import JamStatusPanel from "$lib/components/JamStatusPanel.svelte";
+	import PageMeta from "$lib/components/PageMeta.svelte";
 	import SectionHeading from "$lib/components/SectionHeading.svelte";
+	import { siteDetails } from "$lib/data/site-details";
 
-	let now = $state(new Date());
-
-	$effect(() => {
-		const tick = setInterval(() => {
-			now = new Date();
-		}, 30_000);
-		return () => clearInterval(tick);
-	});
-
-	const status = $derived(jamStatus(now));
-
-	const headline = $derived(
+	const basics = [
 		{
-			"on-now": "It's ON right now!",
-			today: "It's on TONIGHT!",
-			upcoming: "Next jam:",
-			"off-season": "See you in spring! First jam:",
-		}[status.state],
-	);
-
-	const nextJamLabel = $derived(
-		status.nextJam.toLocaleDateString("en-US", {
-			weekday: "long",
-			month: "long",
-			day: "numeric",
-		}),
-	);
-
-	const countdown = $derived(
-		status.state === "on-now" ? "flowing until 10ish" : untilJam(now, status.nextJam),
-	);
-
-	const faqs = [
-		{
-			q: "Is it happening?",
-			a: "Yes. Every Tuesday until the end of time. If the weather's bad, you'll just see fewer people.",
+			title: "Show up when you can",
+			copy: "The first props usually land around 4ish. The busiest stretch is later in the evening.",
 		},
 		{
-			q: "When does it start?",
-			a: "When the first person shows up! Usually around 4ish. Most people are there 6–9. Park closes at 11.",
+			title: "Look for the totem pole",
+			copy: "The group gathers on the north side of Palmer Square Park. Hoops on the grass are another good clue.",
 		},
 		{
-			q: "Are there tacos?",
-			a: "Sometimes! Tacos are a communal effort. There's not always tacos, but there's always flowing TacoCats and good vibes.",
+			title: "Borrow before you buy",
+			copy: "Regulars bring extra props. Ask what is available and somebody can help you start.",
+		},
+		{
+			title: "Leave when you want",
+			copy: "Watch for ten minutes or stay until the lights come out. There is no class schedule to miss.",
+		},
+	];
+
+	const questions = [
+		{
+			question: "Is Tuesday guaranteed?",
+			answer:
+				"The calendar repeats every Tuesday in season. Weather can change the plan, so check the Facebook call before leaving home.",
+		},
+		{
+			question: "Do I need to know how to flow?",
+			answer:
+				"No. The park has beginners, working performers, curious neighbors, and people who mostly came to sit in the grass.",
+		},
+		{
+			question: "Are tacos there every week?",
+			answer:
+				"No. Taco nights have their own schedule. The flow jam still happens on the Tuesdays between them.",
 		},
 	];
 </script>
 
-<svelte:head>
-	<title>Taco Tuesday Flow Jam · Chicago</title>
-	<meta
-		name="description"
-		content="A weekly celebration of flow arts, food, and community. Tuesdays 4ish-10ish, April-October, Palmer Square Park, Chicago."
-	/>
-</svelte:head>
+<PageMeta
+	title="Taco Tuesday Flow Jam · Chicago"
+	description="Free flow arts in Palmer Square Park. Tuesdays 4ish–10ish, April through October. No signup, no experience needed, and props are available to borrow."
+	path="/"
+	home
+/>
 
-<section class="hero">
-	<img
-		class="hero-photo"
-		src="/media/hero.webp"
-		alt="Jammers passing glowing LED juggling clubs at night in Palmer Square Park"
-		fetchpriority="high"
-	/>
-	<div class="scrim" aria-hidden="true"></div>
-	<div class="hero-content shell">
-		<img
-			class="mascot"
-			src="/media/tacocat.png"
-			alt="TacoCat, a cat tucked inside a taco holding a Taco Tuesday Flow Jams sign"
-			width="140"
-			height="140"
-		/>
-		<h1>Taco Tuesday Flow Jam</h1>
-		<p class="tagline">A weekly celebration of flow arts, food, and community. Come play!</p>
-		<div class="status-card" class:on-now={status.state === "on-now"}>
-			<GlassCard elevated>
-				<p class="status">
-					{headline}
-					{#if status.state !== "on-now" && status.state !== "today"}
-						<strong>{nextJamLabel}</strong>
-					{/if}
+<div class="page">
+	<section class="hero" aria-labelledby="page-title">
+		<div class="hero-grid">
+			<div class="identity">
+				<p class="kicker">Free park jam · Chicago · Since 2017</p>
+				<h1 id="page-title">Tuesday night belongs to the park.</h1>
+				<p class="lede">
+					Free flow arts in Palmer Square. Come play, learn one move, or sit in the grass.
 				</p>
-				<p class="countdown">{countdown}</p>
-				<p class="where">Tuesdays 4ish–10ish · Palmer Square Park, 2200 N Kedzie Blvd</p>
-			</GlassCard>
+			</div>
+			<JamStatusPanel />
 		</div>
-	</div>
-</section>
 
-<section class="shell reveal">
-	<SectionHeading kicker="The essentials" title="Frequently asked, honestly answered" />
-	<div class="faq-grid">
-		{#each faqs as faq (faq.q)}
-			<GlassCard interactive>
-				<h3>{faq.q}</h3>
-				<p>{faq.a}</p>
-			</GlassCard>
-		{/each}
-	</div>
-</section>
+		<figure class="hero-photo">
+			<picture>
+				<source
+					srcset="/media/park-noticeboard/hero-group-1200.webp 1200w, /media/park-noticeboard/hero-group-1920.webp 1920w"
+					media="(min-width: 48rem)"
+				/>
+				<img
+					src="/media/park-noticeboard/hero-group-720.webp"
+					srcset="/media/park-noticeboard/hero-group-720.webp 720w, /media/park-noticeboard/hero-group-1200.webp 1200w"
+					sizes="100vw"
+					alt="A large group of Taco Tuesday Flow Jam regulars holding hoops, juggling clubs, and staffs beside the Palmer Square totem pole"
+					width="1920"
+					height="1279"
+					fetchpriority="high"
+				/>
+			</picture>
+			<figcaption>
+				<span>Palmer Square Park, Chicago</span>
+				<span>Find the totem pole. The props will be nearby.</span>
+			</figcaption>
+		</figure>
+	</section>
 
-<section class="shell reveal beacon">
-	<blockquote>
-		“If you show up and you're the first one there, <em>congratulations!</em> You are now the
-		beacon for others to find.”
-	</blockquote>
-	<p class="beacon-note">Look for us by the totem pole, center of the park on the north side.</p>
-</section>
-
-<section class="shell reveal duo">
-	<img
-		src="/media/night-passing.webp"
-		alt="Two silhouetted jammers passing glowing juggling clubs under the park trees"
-		width="1280"
-		height="854"
-	/>
-	<div class="duo-copy">
-		<SectionHeading kicker="New here?" title="Never flowed before? Perfect." />
-		<p>
-			Poi, hoops, staff, juggling, fans, slacklines. Flow arts are for playing, not performing.
-			Someone will hand you a prop within five minutes of arriving. That's a promise and a threat.
-		</p>
-		<div class="cta-row">
-			<a class="cta" href="/about">What's a flow jam?</a>
-			<a class="cta ghost" href="https://photos.app.goo.gl/uNgZT4Zz6EBixmby7" rel="external">
-				See the photos
-			</a>
+	<section class="basics" aria-labelledby="basics-title">
+		<SectionHeading
+			kicker="How the night works"
+			title="No registration desk. No skill check."
+			description="The jam is closer to a weekly neighborhood picnic than a class or show."
+		/>
+		<div class="card-grid">
+			{#each basics as basic, index (basic.title)}
+				<article>
+					<span aria-hidden="true">0{index + 1}</span>
+					<h3 id={index === 0 ? "basics-title" : undefined}>{basic.title}</h3>
+					<p>{basic.copy}</p>
+				</article>
+			{/each}
 		</div>
-	</div>
-</section>
+	</section>
+
+	<section class="first-time">
+		<figure>
+			<picture>
+				<source
+					srcset="/media/park-noticeboard/first-time-720.webp 720w, /media/park-noticeboard/first-time-1400.webp 1400w"
+				/>
+				<img
+					src="/media/park-noticeboard/first-time-720.webp"
+					alt="A flow artist practicing with two flower-shaped props while another balances nearby in Palmer Square Park"
+					width="1400"
+					height="1100"
+					loading="lazy"
+					decoding="async"
+				/>
+			</picture>
+			<figcaption>There is always something strange to try.</figcaption>
+		</figure>
+		<div>
+			<p class="kicker">Your first Tuesday</p>
+			<h2>You do not need to know what “flow arts” means.</h2>
+			<p>
+				Come empty-handed. Ask about poi, hoops, juggling, fans, staffs, or whatever odd object is
+				moving through the air. People share props and teach each other because that is the point.
+			</p>
+			<div class="actions">
+				<ActionLink href="/first-time">Read the first-timer guide</ActionLink>
+				<ActionLink href={siteDetails.mapUrl} tone="outline" external>Open the map</ActionLink>
+			</div>
+		</div>
+	</section>
+
+	<section class="questions">
+		<SectionHeading kicker="Straight answers" title="The useful questions" />
+		<div class="question-grid">
+			{#each questions as item (item.question)}
+				<article>
+					<h3>{item.question}</h3>
+					<p>{item.answer}</p>
+				</article>
+			{/each}
+		</div>
+	</section>
+
+	<section class="explore">
+		<SectionHeading kicker="Keep looking" title="See the jam from another angle" />
+		<nav aria-label="Explore the site">
+			<a href="/gallery"><span>217 approved photos</span><strong>Open the gallery</strong></a>
+			<a href="/story"><span>Started in 2017</span><strong>Read the story</strong></a>
+			<a href="/tacos"><span>Not every Tuesday</span><strong>Find taco night</strong></a>
+			<a href="/chicago-flow"><span>The other six days</span><strong>More Chicago flow</strong></a>
+		</nav>
+	</section>
+</div>
 
 <style>
+	.page {
+		width: var(--shell-width);
+		margin-inline: auto;
+	}
+
 	.hero {
-		position: relative;
-		min-height: min(88svh, 60rem);
-		display: flex;
-		align-items: flex-end;
-		overflow: hidden;
+		padding-top: var(--space-5);
 	}
 
-	.hero-photo {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center 35%;
+	.hero-grid,
+	.first-time {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--feature-min), 1fr));
+		gap: var(--space-7);
+		align-items: center;
 	}
 
-	.scrim {
-		position: absolute;
-		inset: 0;
-		background: var(--gradient-dusk-scrim);
+	.hero-grid {
+		gap: var(--space-5);
 	}
 
-	.hero-content {
-		position: relative;
-		width: 100%;
-		text-align: center;
-		padding-block: var(--spacing-2xl) var(--spacing-xl);
+	.identity {
+		padding-block: 0;
 	}
 
-	.mascot {
-		width: clamp(96px, 14vw, 140px);
-		height: auto;
-		filter: drop-shadow(0 8px 24px oklch(0.05 0.02 270 / 0.6));
-		animation: bob 6s ease-in-out infinite;
-	}
-
-	@keyframes bob {
-		0%,
-		100% {
-			transform: translateY(0);
-		}
-
-		50% {
-			transform: translateY(-8px);
-		}
+	.kicker {
+		margin-bottom: var(--space-3);
+		color: var(--color-gold);
+		font-size: var(--text-small);
+		font-weight: 820;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
 	}
 
 	h1 {
-		margin: var(--spacing-sm) 0 0;
-		font-size: var(--text-hero);
-		font-style: italic;
-		font-weight: 700;
-		background: var(--gradient-fiesta);
-		background-clip: text;
-		-webkit-background-clip: text;
-		color: transparent;
+		max-width: var(--reading-width);
+		margin-bottom: var(--space-5);
+		font-size: var(--text-display);
+		font-weight: 900;
 	}
 
-	.tagline {
-		margin: var(--spacing-sm) 0 var(--spacing-lg);
-		font-size: var(--text-lede);
-		color: var(--color-text-primary);
-	}
-
-	.status-card {
-		max-width: 34rem;
-		margin-inline: auto;
-	}
-
-	.status {
-		margin: 0;
-		font-size: 1.35rem;
-	}
-
-	.countdown {
-		margin: var(--spacing-xs) 0 0;
-		color: var(--color-taco-gold);
-		font-weight: 650;
-	}
-
-	.where {
-		margin: var(--spacing-xs) 0 0;
-		color: var(--color-text-secondary);
-	}
-
-	.status-card.on-now {
-		border-radius: var(--radius-lg);
-		animation: on-now-pulse 3.2s ease-in-out infinite;
-	}
-
-	@keyframes on-now-pulse {
-		0%,
-		100% {
-			box-shadow: 0 0 0 0 rgb(247 179 43 / 0);
-		}
-
-		50% {
-			box-shadow: 0 0 42px 4px rgb(247 179 43 / 0.28);
-		}
-	}
-
-	@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-		.faq-grid:has(:global(.glass:hover)) :global(.glass:not(:hover)) {
-			opacity: 0.65;
-		}
-
-		.faq-grid :global(.glass) {
-			transition:
-				opacity var(--transition-normal),
-				transform var(--transition-fast),
-				border-color var(--transition-fast),
-				background var(--transition-fast);
-		}
-	}
-
-	section:not(.hero) {
-		margin-top: var(--spacing-2xl);
-	}
-
-	.faq-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
-		gap: var(--spacing-lg);
-	}
-
-	.faq-grid h3 {
-		margin: 0 0 var(--spacing-sm);
-		font-size: 1.2rem;
-		font-style: italic;
-		color: var(--color-taco-gold);
-	}
-
-	.faq-grid p {
-		margin: 0;
-		color: var(--color-text-secondary);
-	}
-
-	.beacon blockquote {
-		margin: 0;
-		font-family: var(--font-display);
-		font-size: var(--text-section);
-		font-style: italic;
-		font-weight: 500;
-		text-align: center;
-		max-width: 46rem;
-		margin-inline: auto;
-		text-wrap: balance;
-	}
-
-	.beacon-note {
-		text-align: center;
-		color: var(--color-text-muted);
-		margin-top: var(--spacing-md);
-	}
-
-	.duo {
-		display: grid;
-		gap: var(--spacing-xl);
-		align-items: center;
-	}
-
-	@media (min-width: 68rem) {
-		.duo {
-			grid-template-columns: 5fr 6fr;
-		}
-	}
-
-	.duo img {
-		border-radius: var(--radius-lg);
-		box-shadow: var(--shadow-card);
-	}
-
-	.duo-copy p {
-		color: var(--color-text-secondary);
+	.lede {
+		max-width: var(--reading-width);
+		margin-bottom: 0;
+		color: var(--color-text-soft);
 		font-size: var(--text-lede);
 	}
 
-	.cta-row {
+	.hero-photo {
+		margin-top: var(--space-7);
+		border: var(--border-heavy) solid var(--color-paper);
+		background: var(--color-paper);
+		box-shadow: var(--shadow-photo);
+	}
+
+	.hero-photo img,
+	.first-time img {
+		display: block;
+		width: 100%;
+	}
+
+	.hero-photo figcaption,
+	.first-time figcaption {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--spacing-md);
-		margin-top: var(--spacing-lg);
+		justify-content: space-between;
+		gap: var(--space-2) var(--space-5);
+		padding: var(--space-3) var(--space-4);
+		background: var(--color-paper);
+		color: var(--color-paper-ink);
+		font-size: var(--text-small);
+		font-weight: 750;
 	}
 
-	.cta {
-		display: inline-flex;
-		align-items: center;
-		min-height: var(--min-touch-target);
-		padding: 0 var(--spacing-lg);
-		border-radius: var(--radius-md);
-		background: var(--gradient-fiesta);
-		color: #1a1305;
-		font-weight: 650;
+	.basics,
+	.first-time,
+	.questions,
+	.explore {
+		margin-top: var(--section-gap);
+	}
+
+	.card-grid,
+	.question-grid,
+	.explore nav {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--card-min), 1fr));
+		gap: var(--space-4);
+	}
+
+	.card-grid article,
+	.question-grid article {
+		padding: var(--space-5);
+		border: var(--border-thin) solid var(--color-line);
+		background: var(--color-night-raised);
+	}
+
+	.card-grid span {
+		display: block;
+		margin-bottom: var(--space-6);
+		color: var(--color-red);
+		font-size: var(--text-small);
+		font-weight: 850;
+		letter-spacing: var(--tracking-label);
+	}
+
+	.card-grid h3,
+	.question-grid h3 {
+		margin-bottom: var(--space-3);
+		font-size: var(--text-card-title);
+		font-weight: 820;
+		letter-spacing: var(--tracking-card);
+		line-height: 1.08;
+	}
+
+	.card-grid p,
+	.question-grid p {
+		margin-bottom: 0;
+		color: var(--color-text-soft);
+		font-size: var(--text-small);
+	}
+
+	.first-time figure {
+		margin: 0;
+		border: var(--border-heavy) solid var(--color-paper);
+		background: var(--color-paper);
+		transform: rotate(var(--photo-tilt));
+	}
+
+	.first-time h2 {
+		margin-bottom: var(--space-5);
+		font-size: var(--text-section);
+		font-weight: 880;
+	}
+
+	.first-time p:not(.kicker) {
+		max-width: var(--reading-width);
+		color: var(--color-text-soft);
+		font-size: var(--text-lede);
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-top: var(--space-6);
+	}
+
+	.explore nav a {
+		display: grid;
+		min-height: var(--status-reserve);
+		align-content: space-between;
+		padding: var(--space-5);
+		border: var(--border-medium) solid var(--color-line);
+		background: var(--color-night-panel);
 		text-decoration: none;
-		box-shadow: 0 10px 28px oklch(0.65 0.15 70 / 0.3);
 		transition:
-			transform var(--transition-fast),
-			box-shadow var(--transition-fast);
+			background var(--duration-normal) var(--ease-out),
+			border-color var(--duration-normal) var(--ease-out),
+			transform var(--duration-normal) var(--ease-out);
 	}
 
-	.cta:hover {
-		transform: translateY(var(--hover-lift));
-		box-shadow: 0 14px 36px oklch(0.65 0.15 70 / 0.42);
+	.explore nav a:hover {
+		border-color: var(--color-gold);
+		background: var(--color-night-soft);
+		transform: translateY(calc(var(--border-medium) * -1));
 	}
 
-	.cta.ghost {
-		background: transparent;
-		color: var(--color-text-primary);
-		border: 1px solid var(--glass-border-hover);
-		box-shadow: none;
+	.explore span {
+		color: var(--color-text-muted);
+		font-size: var(--text-small);
+		font-weight: 750;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
 	}
 
-	.cta.ghost:hover {
-		background: var(--color-bg-card-hover);
-		box-shadow: none;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.mascot {
-			animation: none;
-		}
+	.explore strong {
+		color: var(--color-gold);
+		font-size: var(--text-card-title);
+		line-height: 1.12;
 	}
 </style>

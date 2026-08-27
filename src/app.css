@@ -1,93 +1,86 @@
-@layer thirdparty, base, components, overrides;
+@layer thirdparty, base, overrides;
 
 :root {
-	/* Brand */
-	--color-taco-gold: #f7b32b;
-	--color-salsa-red: #e63946;
-	--color-guac-green: #52b788;
-	--color-glow-purple: #9d6bd8;
+	--color-night: #091321;
+	--color-night-raised: #111f31;
+	--color-night-panel: #182a3f;
+	--color-night-soft: #223750;
+	--color-paper: #f2dfa8;
+	--color-paper-deep: #d7bc73;
+	--color-paper-ink: #15191d;
+	--color-text: #fff9e9;
+	--color-text-soft: #d5d0c3;
+	--color-text-muted: #aaa89f;
+	--color-gold: #ffd36a;
+	--color-red: #ff6955;
+	--color-red-deep: #c63f35;
+	--color-green: #77dc8d;
+	--color-line: #42536a;
+	--color-line-soft: rgb(255 249 233 / 0.14);
+	--color-shadow: rgb(0 0 0 / 0.42);
+	--color-photo-scrim: rgb(9 19 33 / 0.72);
+	--texture-page:
+		radial-gradient(circle at 16% 12%, rgb(255 211 106 / 0.055), transparent 32%),
+		radial-gradient(circle at 84% 24%, rgb(255 105 85 / 0.045), transparent 28%),
+		linear-gradient(rgb(255 255 255 / 0.018) 1px, transparent 1px);
+	--texture-paper:
+		radial-gradient(circle at 18% 22%, rgb(255 255 255 / 0.35), transparent 28%),
+		repeating-linear-gradient(7deg, rgb(21 25 29 / 0.035) 0 1px, transparent 1px 5px);
 
-	/* Backgrounds (dusk park, permanently dark) */
-	--color-bg-primary: #12141d;
-	--color-bg-secondary: #1a1d29;
-	--color-bg-tertiary: #232738;
-	--color-bg-card: #1e2230;
-	--color-bg-card-hover: #262b3d;
-
-	/* Text */
-	--color-text-primary: #f4f1ea;
-	--color-text-secondary: #c5c1b8;
-	--color-text-muted: #9b978e;
-	--color-border: #333849;
-
-	/* Glass (the house surface — dusk hue 270) */
-	--glass-bg: oklch(0.16 0.018 270 / 0.55);
-	--glass-bg-elevated: oklch(0.19 0.02 270 / 0.65);
-	--glass-border: oklch(0.45 0.04 270 / 0.16);
-	--glass-border-hover: oklch(0.55 0.06 270 / 0.28);
-	--glass-blur: 14px;
-	--shadow-glass:
-		0 8px 32px oklch(0.05 0.02 270 / 0.3),
-		0 2px 8px oklch(0.05 0.02 270 / 0.2),
-		inset 0 1px 0 oklch(0.6 0.04 270 / 0.08);
-
-	/* Gradients & shadows */
-	--gradient-fiesta: linear-gradient(135deg, var(--color-taco-gold), var(--color-salsa-red));
-	--gradient-dusk-scrim: linear-gradient(
-		to top,
-		oklch(0.13 0.02 270 / 0.96) 0%,
-		oklch(0.13 0.02 270 / 0.62) 38%,
-		oklch(0.13 0.02 270 / 0.12) 70%,
-		transparent 100%
-	);
-	--shadow-card: 0 2px 12px rgb(0 0 0 / 0.35);
-	--shadow-glow: 0 0 24px rgb(247 179 43 / 0.25);
-
-	/* Spacing */
-	--spacing-xs: 0.25rem;
-	--spacing-sm: 0.5rem;
-	--spacing-md: 1rem;
-	--spacing-lg: 1.5rem;
-	--spacing-xl: 2.5rem;
-	--spacing-2xl: 4rem;
-
-	/* Layout */
-	--shell-w: min(76rem, 92vw);
-
-	/* Radius */
-	--radius-sm: 6px;
-	--radius-md: 10px;
-	--radius-lg: 18px;
-	--radius-full: 999px;
-
-	/* Motion (tiny, premium) */
-	--duration-fast: 160ms;
-	--duration-normal: 250ms;
-	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-	--transition-fast: var(--duration-fast) ease;
-	--transition-normal: var(--duration-normal) ease;
-	--hover-lift: -2px;
-
-	/* Type */
-	--font-display: "Fraunces Variable", Georgia, serif;
 	--font-body: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
-	--font-size-min: 0.875rem; /* 14px floor for essential text */
+	--font-story: "Fraunces Variable", Georgia, serif;
+	--font-size-min: 0.875rem;
+	--text-small: clamp(0.875rem, 0.84rem + 0.12vw, 1rem);
+	--text-body: clamp(1rem, 0.95rem + 0.18vw, 1.2rem);
+	--text-lede: clamp(1.12rem, 1rem + 0.48vw, 1.55rem);
+	--text-card-title: clamp(1.2rem, 1.06rem + 0.48vw, 1.6rem);
+	--text-section: clamp(2rem, 1.52rem + 1.55vw, 3.65rem);
+	--text-page: clamp(2.75rem, 1.82rem + 3.1vw, 6.4rem);
+	--text-display: clamp(3rem, 1.62rem + 4.75vw, 8.6rem);
+	--text-status: clamp(2rem, 1.35rem + 2.18vw, 4.2rem);
+	--tracking-label: 0.115em;
+	--tracking-tight: -0.045em;
+	--tracking-card: -0.02em;
+	--photo-tilt: -0.5deg;
 
-	/* Type ramps (continuous — no breakpoint jumps) */
-	--text-hero: clamp(2.6rem, 1.6rem + 4.4vw, 5rem);
-	--text-title: clamp(1.9rem, 1.4rem + 1.8vw, 3rem);
-	--text-section: clamp(1.4rem, 1.15rem + 0.9vw, 2.1rem);
-	--text-lede: clamp(1.05rem, 1rem + 0.4vw, 1.3rem);
-	--text-kicker: clamp(0.75rem, 0.7rem + 0.15vw, 0.88rem);
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-5: 1.5rem;
+	--space-6: 2rem;
+	--space-7: 3rem;
+	--space-8: 4.5rem;
+	--space-9: 7rem;
+	--page-gutter: clamp(1rem, 3vw, 4.5rem);
+	--section-gap: clamp(4.5rem, 8vw, 9rem);
 
-	/* Accessibility */
-	--min-touch-target: 44px;
-	--focus-ring: 2px solid var(--color-taco-gold);
+	--shell-width: min(150rem, calc(100vw - (var(--page-gutter) * 2)));
+	--reading-width: 66ch;
+	--card-min: min(19rem, 100%);
+	--feature-min: min(26rem, 100%);
+	--gallery-column: 10rem;
+	--hero-photo-min: 18rem;
+	--closing-min: 18rem;
+	--min-touch-target: 2.75rem;
+	--header-offset: 6.75rem;
+	--status-reserve: 18rem;
 
-	/* Z-index */
+	--border-thin: 0.0625rem;
+	--border-medium: 0.125rem;
+	--border-heavy: 0.25rem;
+	--radius-small: 0.25rem;
+	--radius-medium: 0.7rem;
+	--radius-large: 1.15rem;
+	--radius-round: 999rem;
+	--shadow-panel: 0.75rem 0.75rem 0 var(--color-shadow);
+	--shadow-photo: 1rem 1rem 0 rgb(255 105 85 / 0.72);
+
+	--duration-fast: 150ms;
+	--duration-normal: 240ms;
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--focus-ring: 0 0 0 0.2rem var(--color-night), 0 0 0 0.42rem var(--color-gold);
 	--z-header: 50;
-	--z-modal: 90;
-	--z-toast: 100;
 }
 
 @layer base {
@@ -97,35 +90,58 @@
 		box-sizing: border-box;
 	}
 
+	html {
+		background: var(--color-night);
+		scroll-padding-top: var(--header-offset);
+	}
+
 	body {
+		min-width: 20rem;
 		margin: 0;
-		background: var(--color-bg-primary);
-		color: var(--color-text-primary);
+		background-color: var(--color-night);
+		background-image: var(--texture-page);
+		background-size:
+			auto,
+			auto,
+			2rem 2rem;
+		color: var(--color-text);
 		font-family: var(--font-body);
-		line-height: 1.6;
-		overscroll-behavior: none;
+		font-size: var(--text-body);
+		line-height: 1.58;
+		text-rendering: optimizeLegibility;
+	}
+
+	h1,
+	h2,
+	h3,
+	p,
+	figure,
+	blockquote {
+		margin-block-start: 0;
 	}
 
 	h1,
 	h2,
 	h3 {
-		font-family: var(--font-display);
-		font-variation-settings:
-			"opsz" 144,
-			"SOFT" 0,
-			"WONK" 1;
-		line-height: 1.1;
-		letter-spacing: -0.015em;
+		line-height: 0.96;
+		letter-spacing: var(--tracking-tight);
+		text-wrap: balance;
 	}
 
-	:focus-visible {
-		outline: var(--focus-ring);
-		outline-offset: 2px;
+	a {
+		color: inherit;
 	}
 
-	::selection {
-		background: var(--color-taco-gold);
-		color: var(--color-bg-primary);
+	button,
+	a {
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	button,
+	input,
+	textarea,
+	select {
+		font: inherit;
 	}
 
 	img,
@@ -133,35 +149,28 @@
 		max-width: 100%;
 		height: auto;
 	}
+
+	:focus-visible {
+		outline: 0;
+		box-shadow: var(--focus-ring);
+	}
+
+	::selection {
+		background: var(--color-gold);
+		color: var(--color-paper-ink);
+	}
 }
 
-@layer components {
-	/* The one content band — header, footer, and every page section share it */
-	.shell {
-		max-width: var(--shell-w);
-		margin-inline: auto;
-		padding-inline: var(--spacing-lg);
+@media (min-width: 45rem) {
+	:root {
+		--gallery-column: 14rem;
 	}
+}
 
-	/* Scroll-driven entrance reveal — native CSS, degrades to fully visible */
-	@supports (animation-timeline: view()) {
-		.reveal {
-			animation: reveal-up linear both;
-			animation-timeline: view();
-			animation-range: entry 0% entry 30%;
-		}
-	}
-
-	@keyframes reveal-up {
-		from {
-			opacity: 0;
-			transform: translateY(28px);
-		}
-
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+@media (min-width: 105rem) {
+	:root {
+		--gallery-column: 17rem;
+		--page-gutter: 5.5rem;
 	}
 }
 
@@ -171,7 +180,7 @@
 	*::after {
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
 	}
 }

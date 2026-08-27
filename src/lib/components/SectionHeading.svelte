@@ -2,36 +2,48 @@
 	interface Props {
 		kicker: string;
 		title: string;
+		description?: string;
 	}
 
-	let { kicker, title }: Props = $props();
+	let { kicker, title, description }: Props = $props();
 </script>
 
-<header class="section-heading">
+<header>
 	<p class="kicker">{kicker}</p>
 	<h2>{title}</h2>
+	{#if description}
+		<p class="description">{description}</p>
+	{/if}
 </header>
 
 <style>
-	.section-heading {
-		border-top: 1px solid var(--color-border);
-		padding-top: var(--spacing-lg);
-		margin-bottom: var(--spacing-xl);
+	header {
+		max-width: var(--reading-width);
+		margin-bottom: var(--space-7);
+		padding-top: var(--space-5);
+		border-top: var(--border-heavy) solid var(--color-red);
 	}
 
 	.kicker {
-		margin: 0 0 var(--spacing-sm);
-		font-size: var(--text-kicker);
-		font-weight: 650;
-		letter-spacing: 0.16em;
+		margin-bottom: var(--space-3);
+		color: var(--color-gold);
+		font-size: var(--text-small);
+		font-weight: 800;
+		letter-spacing: var(--tracking-label);
 		text-transform: uppercase;
-		color: var(--color-taco-gold);
 	}
 
 	h2 {
-		margin: 0;
+		margin-bottom: 0;
 		font-size: var(--text-section);
-		font-style: italic;
-		font-weight: 640;
+		font-weight: 850;
+	}
+
+	.description {
+		max-width: var(--reading-width);
+		margin-top: var(--space-4);
+		margin-bottom: 0;
+		color: var(--color-text-soft);
+		font-size: var(--text-lede);
 	}
 </style>

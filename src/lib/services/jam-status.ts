@@ -1,79 +1,119 @@
-export type JamState = "on-now" | "today" | "upcoming" | "off-season";
+export type JamState = "today" | "upcoming" | "off-season";
+
+export interface CivilDate {
+	year: number;
+	month: number;
+	day: number;
+}
 
 export interface JamStatus {
 	state: JamState;
-	nextJam: Date;
+	today: CivilDate;
+	nextJam: CivilDate;
 }
 
-// Season runs April through October (months 3–9, zero-indexed).
-const SEASON_FIRST_MONTH = 3;
-const SEASON_LAST_MONTH = 9;
-const JAM_WEEKDAY = 2; // Tuesday
-const JAM_START_HOUR = 16; // "4ish"
-const JAM_END_HOUR = 22; // "10ish"
+const CHICAGO_TIME_ZONE = "America/Chicago";
+const SEASON_FIRST_MONTH = 4;
+const SEASON_LAST_MONTH = 10;
+const JAM_WEEKDAY = 2;
+const JAM_END_HOUR = 22;
 
-function inSeason(date: Date): boolean {
-	const m = date.getMonth();
-	return m >= SEASON_FIRST_MONTH && m <= SEASON_LAST_MONTH;
+const chicagoClock = new Intl.DateTimeFormat("en-US", {
+	timeZone: CHICAGO_TIME_ZONE,
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit",
+	hour: "2-digit",
+	hourCycle: "h23",
+});
+
+function chicagoParts(date: Date): CivilDate & { hour: number } {
+	const parts = chicagoClock.formatToParts(date);
+	const read = (type: Intl.DateTimeFormatPartTypes): number => {
+		const part = parts.find((candidate) => candidate.type === type);
+		if (!part) {
+			throw new Error(`Chicago clock did not return a ${type} part`);
+		}
+		return Number(part.value);
+	};
+
+	return {
+		year: read("year"),
+		month: read("month"),
+		day: read("day"),
+		hour: read("hour"),
+	};
 }
 
-function firstTuesdayOfApril(year: number): Date {
-	const d = new Date(year, SEASON_FIRST_MONTH, 1, JAM_START_HOUR);
-	while (d.getDay() !== JAM_WEEKDAY) {
-		d.setDate(d.getDate() + 1);
-	}
-	return d;
+function asUtcDate(date: CivilDate): Date {
+	return new Date(Date.UTC(date.year, date.month - 1, date.day, 12));
 }
 
-function nextTuesday(from: Date, includeToday: boolean): Date {
-	const d = new Date(from.getFullYear(), from.getMonth(), from.getDate(), JAM_START_HOUR);
-	let delta = (JAM_WEEKDAY - d.getDay() + 7) % 7;
+function fromUtcDate(date: Date): CivilDate {
+	return {
+		year: date.getUTCFullYear(),
+		month: date.getUTCMonth() + 1,
+		day: date.getUTCDate(),
+	};
+}
+
+function addDays(date: CivilDate, days: number): CivilDate {
+	const result = asUtcDate(date);
+	result.setUTCDate(result.getUTCDate() + days);
+	return fromUtcDate(result);
+}
+
+function inSeason(date: CivilDate): boolean {
+	return date.month >= SEASON_FIRST_MONTH && date.month <= SEASON_LAST_MONTH;
+}
+
+function isTuesday(date: CivilDate): boolean {
+	return asUtcDate(date).getUTCDay() === JAM_WEEKDAY;
+}
+
+function nextTuesday(date: CivilDate, includeToday: boolean): CivilDate {
+	const weekday = asUtcDate(date).getUTCDay();
+	let delta = (JAM_WEEKDAY - weekday + 7) % 7;
 	if (delta === 0 && !includeToday) {
 		delta = 7;
 	}
-	d.setDate(d.getDate() + delta);
-	return d;
+	return addDays(date, delta);
 }
 
-/** Human label for how far away the next jam is. */
-export function untilJam(now: Date, next: Date): string {
-	const ms = next.getTime() - now.getTime();
-	if (ms <= 0) {
-		return "happening now";
-	}
-	const minutes = Math.round(ms / 60_000);
-	if (minutes < 60) {
-		return `in ${minutes} minute${minutes === 1 ? "" : "s"}`;
-	}
-	const hours = Math.round(minutes / 60);
-	if (hours < 24) {
-		return `in about ${hours} hour${hours === 1 ? "" : "s"}`;
-	}
-	const days = Math.round(hours / 24);
-	return `in ${days} day${days === 1 ? "" : "s"}`;
+function firstTuesdayOfApril(year: number): CivilDate {
+	return nextTuesday({ year, month: SEASON_FIRST_MONTH, day: 1 }, true);
 }
 
 export function jamStatus(now: Date): JamStatus {
-	if (!inSeason(now)) {
-		const year = now.getMonth() > SEASON_LAST_MONTH ? now.getFullYear() + 1 : now.getFullYear();
-		return { state: "off-season", nextJam: firstTuesdayOfApril(year) };
+	const chicago = chicagoParts(now);
+	const today = { year: chicago.year, month: chicago.month, day: chicago.day };
+
+	if (!inSeason(today)) {
+		const year = today.month > SEASON_LAST_MONTH ? today.year + 1 : today.year;
+		return { state: "off-season", today, nextJam: firstTuesdayOfApril(year) };
 	}
 
-	const isJamDay = now.getDay() === JAM_WEEKDAY;
-	const hour = now.getHours();
-
-	if (isJamDay && hour >= JAM_START_HOUR && hour < JAM_END_HOUR) {
-		return { state: "on-now", nextJam: nextTuesday(now, true) };
+	if (isTuesday(today) && chicago.hour < JAM_END_HOUR) {
+		return { state: "today", today, nextJam: today };
 	}
 
-	if (isJamDay && hour < JAM_START_HOUR) {
-		return { state: "today", nextJam: nextTuesday(now, true) };
+	const nextJam = nextTuesday(today, false);
+	if (!inSeason(nextJam)) {
+		return { state: "off-season", today, nextJam: firstTuesdayOfApril(today.year + 1) };
 	}
 
-	// Tuesday after hours, or any other day: point at the next Tuesday.
-	const next = nextTuesday(now, false);
-	if (!inSeason(next)) {
-		return { state: "off-season", nextJam: firstTuesdayOfApril(next.getFullYear() + 1) };
-	}
-	return { state: "upcoming", nextJam: next };
+	return { state: "upcoming", today, nextJam };
+}
+
+export function formatJamDate(date: CivilDate, style: "short" | "long" = "long"): string {
+	return new Intl.DateTimeFormat("en-US", {
+		timeZone: "UTC",
+		weekday: style === "long" ? "long" : "short",
+		month: style === "long" ? "long" : "short",
+		day: "numeric",
+	}).format(asUtcDate(date));
+}
+
+export function civilDateToIso(date: CivilDate): string {
+	return `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
 }
