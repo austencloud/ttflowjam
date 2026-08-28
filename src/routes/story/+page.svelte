@@ -7,18 +7,18 @@
 
 <PageMeta
 	title="The story"
-	description="How Taco Tuesday Flow Jam moved from Logan Square to Palmer Square Park in 2017, and why a cat in a taco watches over the whole thing."
+	description="The 2017 start of Taco Tuesday Flow Jam, its move to Palmer Square Park, and the TacoCat mascot."
 	path="/story"
 />
 
 <div class="page">
 	<div class="lead-grid">
 		<header class="intro">
-			<p class="kicker">The short history</p>
-			<h1>A weekly habit since 2017.</h1>
+			<p class="kicker">History</p>
+			<h1>Started in 2017.</h1>
 			<p>
-				The jam started with one Tuesday near the Logan Square Blue Line, moved to Palmer Square the
-				next week, and kept going because people kept bringing props.
+				The first jam met near the Logan Square Blue Line on April 11, 2017. It moved to Palmer
+				Square Park the following week.
 			</p>
 		</header>
 
@@ -35,27 +35,24 @@
 					fetchpriority="high"
 				/>
 			</picture>
-			<figcaption>Serious practice. Questionable wardrobe decisions.</figcaption>
+			<figcaption>Taco Tuesday Flow Jam participants at Palmer Square Park</figcaption>
 		</figure>
 	</div>
 
 	<section class="timeline">
-		<SectionHeading kicker="Two Tuesdays in 2017" title="The move that stuck" />
+		<SectionHeading kicker="April 2017" title="The first two jams" />
 		<div class="entries">
 			<article>
-				<p class="date">April 11</p>
-				<h2>The first jam</h2>
-				<p>
-					People met at the eagle statue near the Logan Square Blue Line. It was the whole plan:
-					bring props, meet on Tuesday, see what happened.
-				</p>
+				<p class="date">April 11, 2017</p>
+				<h2>Logan Square</h2>
+				<p>The first jam met at the eagle statue near the Logan Square Blue Line station.</p>
 			</article>
 			<article>
-				<p class="date">April 18</p>
+				<p class="date">April 18, 2017</p>
 				<h2>Palmer Square</h2>
 				<p>
-					The gathering moved a few blocks west to the park. The totem pole became the landmark, and
-					the jam has returned there every season since.
+					The jam moved to Palmer Square Park. The totem pole became the meeting landmark, and the
+					jam has returned there each season.
 				</p>
 			</article>
 		</div>
@@ -63,17 +60,13 @@
 
 	<section class="continuity">
 		<div>
-			<p class="kicker">What keeps it alive</p>
-			<h2>Attendance is the infrastructure.</h2>
+			<p class="kicker">Organization</p>
+			<h2>Self-organized</h2>
 		</div>
 		<div class="prose">
 			<p>
-				There is no ticket booth and no audience line. The jam exists when somebody brings a hoop,
-				somebody else brings clubs, and the next person decides to stop on the grass.
-			</p>
-			<p>
-				That loose ownership is the durable part. Beginners become regulars. Regulars teach one
-				move. People bring snacks, blankets, spare props, and eventually friends.
+				The jam has no staff, ticketing, or formal organization. Participants bring props, share
+				gear, and contribute food on scheduled taco nights.
 			</p>
 			<ActionLink href={siteDetails.pressUrl} tone="quiet" external
 				>Read the 2023 Sun-Times feature</ActionLink
@@ -81,7 +74,7 @@
 		</div>
 	</section>
 
-	<section class="theology">
+	<section class="mascot">
 		<img
 			src="/media/tacocat.png"
 			alt="TacoCat, a cat tucked inside a taco holding a Taco Tuesday Flow Jams sign"
@@ -91,12 +84,9 @@
 			decoding="async"
 		/>
 		<div>
-			<p class="kicker">Required theology</p>
-			<h2>TacoCat reads the same both ways.</h2>
-			<p>
-				That palindrome is enough to qualify a cat in a taco as the jam's presiding deity. TacoCat
-				asks for no doctrine beyond showing up and leaving the park better than you found it.
-			</p>
+			<p class="kicker">Mascot</p>
+			<h2>TacoCat</h2>
+			<p>TacoCat is the jam's mascot. The name is a palindrome.</p>
 		</div>
 	</section>
 
@@ -114,7 +104,7 @@
 				decoding="async"
 			/>
 		</picture>
-		<figcaption>The park changes character after sunset.</figcaption>
+		<figcaption>LED fan spinning after sunset at Palmer Square Park</figcaption>
 	</figure>
 </div>
 
@@ -190,7 +180,7 @@
 
 	.timeline,
 	.continuity,
-	.theology,
+	.mascot,
 	.night-photo {
 		margin-top: var(--section-gap);
 	}
@@ -216,7 +206,7 @@
 
 	.entries p:last-child,
 	.prose,
-	.theology p:last-child {
+	.mascot p:last-child {
 		color: var(--color-text-soft);
 	}
 
@@ -233,7 +223,7 @@
 	}
 
 	.continuity h2,
-	.theology h2 {
+	.mascot h2 {
 		margin-bottom: var(--space-5);
 		font-family: var(--font-story);
 		font-size: var(--text-section);
@@ -248,7 +238,7 @@
 		margin-bottom: var(--space-5);
 	}
 
-	.theology {
+	.mascot {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(var(--feature-min), 1fr));
 		gap: var(--space-7);
@@ -261,16 +251,16 @@
 		color: var(--color-paper-ink);
 	}
 
-	.theology img {
+	.mascot img {
 		width: min(100%, var(--status-reserve));
 		justify-self: center;
 	}
 
-	.theology .kicker {
+	.mascot .kicker {
 		color: var(--color-red-deep);
 	}
 
-	.theology p:last-child {
+	.mascot p:last-child {
 		color: var(--color-paper-ink);
 	}
 

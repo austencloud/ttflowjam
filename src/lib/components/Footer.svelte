@@ -16,7 +16,7 @@
 			<a href="/chicago-flow">More Chicago flow</a>
 		</nav>
 	</div>
-	<p class="honesty">Weather calls live on Facebook. This site does not guess.</p>
+	<p class="honesty">Weather updates are posted on Facebook.</p>
 </footer>
 
 <style>

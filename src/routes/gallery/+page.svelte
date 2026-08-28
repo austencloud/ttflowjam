@@ -57,17 +57,17 @@
 
 <PageMeta
 	title="Gallery"
-	description="217 privacy-reviewed photos from Taco Tuesday Flow Jam at Palmer Square Park, shown in their original shapes."
+	description="Privacy-reviewed photos from Taco Tuesday Flow Jam at Palmer Square Park."
 	path="/gallery"
 />
 
 <div class="page">
 	<header>
-		<p class="kicker">The community album</p>
-		<h1>A pile of Tuesdays.</h1>
+		<p class="kicker">Community album</p>
+		<h1>Gallery</h1>
 		<p class="lede">
-			{items.length} privacy-reviewed photos from the shared album. The archive does not preserve reliable
-			dates, so this wall does not invent them.
+			{items.length} privacy-reviewed photos from the shared album. Dates are not shown because the source
+			dates were not reliable.
 		</p>
 		<a href={siteDetails.albumUrl} rel="external">Add your own photos to the shared album</a>
 	</header>

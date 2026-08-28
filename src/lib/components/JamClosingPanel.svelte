@@ -18,11 +18,12 @@
 		<div>
 			<p class="kicker">{lead}</p>
 			<h2 id="closing-title">{dateLabel}</h2>
-			<p>{siteDetails.schedule}. Free, no signup, and beginner-friendly.</p>
+			<p>{siteDetails.schedule}. Free. All ages and skill levels. No signup.</p>
 		</div>
 		<div class="actions">
-			<ActionLink href={siteDetails.mapUrl} external>Map the totem pole</ActionLink>
-			<ActionLink href={siteDetails.facebookUrl} tone="outline" external>Weather call</ActionLink>
+			<ActionLink href={siteDetails.mapUrl} external>Open map</ActionLink>
+			<ActionLink href={siteDetails.facebookUrl} tone="outline" external>Weather updates</ActionLink
+			>
 			<ActionLink href={siteDetails.paypalUrl} tone="quiet" external>Taco fund</ActionLink>
 		</div>
 	</div>

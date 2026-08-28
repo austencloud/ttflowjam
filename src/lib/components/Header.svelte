@@ -3,10 +3,10 @@
 	import { formatJamDate, jamStatus } from "$lib/services/jam-status";
 
 	const links = [
-		{ href: "/", label: "Tonight" },
+		{ href: "/", label: "Jam" },
 		{ href: "/first-time", label: "First time" },
 		{ href: "/gallery", label: "Gallery" },
-		{ href: "/story", label: "Story" },
+		{ href: "/story", label: "History" },
 		{ href: "/tacos", label: "Tacos" },
 	];
 
@@ -23,9 +23,9 @@
 		<a class="brand" href="/" aria-label="Taco Tuesday Flow Jam home">Taco Tuesday</a>
 		<a class="status" href="/#jam-status">
 			<span class="signal" aria-hidden="true"></span>
-			<strong>No call</strong>
+			<strong>No weather update</strong>
 			<b>{dateLabel}</b>
-			<span class="sr-only">Weather call not posted. {dateLabel} is the calendar forecast.</span>
+			<span class="sr-only">Weather update not posted. {dateLabel} is the scheduled date.</span>
 		</a>
 	</div>
 	<nav aria-label="Main navigation">

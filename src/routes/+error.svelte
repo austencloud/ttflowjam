@@ -12,10 +12,10 @@
 
 <section>
 	<p class="code">{page.status}</p>
-	<h1>The prop rolled somewhere else.</h1>
-	<p>{page.error?.message ?? "That page is not on the grass anymore."}</p>
+	<h1>Page not found</h1>
+	<p>{page.error?.message ?? "The requested page could not be found."}</p>
 	<div>
-		<ActionLink href="/">Back to tonight</ActionLink>
+		<ActionLink href="/">Back to the jam page</ActionLink>
 		<ActionLink href="/first-time" tone="outline">First-timer guide</ActionLink>
 	</div>
 </section>

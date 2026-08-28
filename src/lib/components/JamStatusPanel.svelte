@@ -16,16 +16,16 @@
 <section id="jam-status" aria-labelledby="jam-status-title">
 	<div class="topline">
 		<p>{lead}</p>
-		<span>Calendar forecast</span>
+		<span>Scheduled date</span>
 	</div>
 	<h2 id="jam-status-title">{dateLabel}</h2>
-	<p class="schedule">4ish–10ish · free</p>
+	<p class="schedule">4ish to 10ish · free</p>
 
 	<div class="call">
 		<span aria-hidden="true"></span>
 		<div>
-			<strong>No weather call posted</strong>
-			<p>The calendar points to Tuesday. Facebook has the human go/no-go call.</p>
+			<strong>No weather update posted</strong>
+			<p>Weather updates are posted on Facebook.</p>
 		</div>
 	</div>
 
@@ -36,7 +36,7 @@
 		</div>
 		<div>
 			<dt>Who</dt>
-			<dd>All ages and levels. No signup.</dd>
+			<dd>All ages and skill levels. No signup.</dd>
 		</div>
 		<div>
 			<dt>Gear</dt>
@@ -45,8 +45,8 @@
 	</dl>
 
 	<div class="actions">
-		<ActionLink href={siteDetails.mapUrl} tone="ink" external>Map the totem pole</ActionLink>
-		<ActionLink href={siteDetails.facebookUrl} tone="outline" external>Check the call</ActionLink>
+		<ActionLink href={siteDetails.mapUrl} tone="ink" external>Open map</ActionLink>
+		<ActionLink href={siteDetails.facebookUrl} tone="outline" external>Weather updates</ActionLink>
 	</div>
 </section>
 

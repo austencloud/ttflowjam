@@ -11,18 +11,15 @@
 
 <PageMeta
 	title="Taco nights"
-	description="The 2026 Taco Tuesday Flow Jam taco schedule, how the community griddle works, and where to chip in to the taco fund."
+	description="The 2026 Taco Tuesday Flow Jam taco schedule and taco fund information."
 	path="/tacos"
 />
 
 <div class="page">
 	<header class="intro">
-		<p class="kicker">Important distinction</p>
-		<h1>The jam is every Tuesday. Tacos are not.</h1>
-		<p>
-			Taco nights are a community cookout inside the flow jam. Check the dated schedule before
-			arriving hungry.
-		</p>
+		<p class="kicker">2026</p>
+		<h1>Taco night schedule</h1>
+		<p>The flow jam runs every Tuesday in season. Tacos are served only on the dates below.</p>
 	</header>
 
 	<div class="lead-grid">
@@ -39,22 +36,22 @@
 					fetchpriority="high"
 				/>
 			</picture>
-			<figcaption>The griddle is communal. So is the cleanup.</figcaption>
+			<figcaption>Food preparation at Palmer Square Park</figcaption>
 		</figure>
 
 		<aside aria-labelledby="next-taco-title">
 			<p class="label">2026 taco schedule</p>
 			{#if nextTaco}
 				<h2 id="next-taco-title">Next tacos: {nextTaco.label}</h2>
-				<p>Food starts around 6ish and goes until it runs out.</p>
+				<p>Food starts around 6ish and continues while supplies last.</p>
 			{:else}
 				<h2 id="next-taco-title">The published 2026 taco dates have passed.</h2>
 				<p>Watch Facebook for the next posted cookout.</p>
 			{/if}
-			<p class="caveat">The flow jam keeps its regular Tuesday schedule either way.</p>
+			<p class="caveat">The flow jam keeps its regular Tuesday schedule.</p>
 			<div class="actions">
 				<ActionLink href={siteDetails.paypalUrl} tone="ink" external
-					>Chip in to the taco fund</ActionLink
+					>Contribute to the taco fund</ActionLink
 				>
 				<ActionLink href={siteDetails.facebookUrl} tone="outline" external
 					>Check Facebook</ActionLink
@@ -64,11 +61,7 @@
 	</div>
 
 	<section class="schedule">
-		<SectionHeading
-			kicker="Four cookouts"
-			title="The 2026 dates"
-			description="A date marked past is history, not a promise about tonight."
-		/>
+		<SectionHeading kicker="Published schedule" title="2026 taco nights" />
 		<ol>
 			{#each tacoNights2026 as night (night.iso)}
 				<li class:past={night.iso < today} class:next={night.iso === nextTaco?.iso}>
@@ -82,28 +75,22 @@
 	</section>
 
 	<section class="how">
-		<SectionHeading kicker="How it works" title="A potluck with a designated griddle" />
+		<SectionHeading kicker="Taco nights" title="Serving, contributions, and cleanup" />
 		<div class="cards">
 			<article>
-				<h2>Bring your appetite</h2>
-				<p>Serving starts around 6ish. Quantities depend on what the group brought that week.</p>
+				<h2>Serving</h2>
+				<p>Food starts around 6ish and continues while supplies last.</p>
 			</article>
 			<article>
-				<h2>Put $5 in the next round</h2>
-				<p>The taco fund buys tortillas and ingredients. PayPal is the current online option.</p>
+				<h2>Contribution</h2>
+				<p>The contribution is $5 if you eat. PayPal contributions support ingredient purchases.</p>
 			</article>
 			<article>
-				<h2>Help the park disappear again</h2>
-				<p>
-					Pack out plates, scraps, and gear. The goal is a cleaner patch of grass than we found.
-				</p>
+				<h2>Cleanup</h2>
+				<p>Pack out plates, food scraps, and gear.</p>
 			</article>
 		</div>
 	</section>
-
-	<blockquote>
-		<p>“Taco Tuesday” is the name of the jam. “There will be tacos” is a separate sentence.</p>
-	</blockquote>
 </div>
 
 <style>
@@ -205,8 +192,7 @@
 	}
 
 	.schedule,
-	.how,
-	blockquote {
+	.how {
 		margin-top: var(--section-gap);
 	}
 
@@ -275,19 +261,5 @@
 	.cards p {
 		margin-bottom: 0;
 		color: var(--color-text-soft);
-	}
-
-	blockquote {
-		max-width: var(--reading-width);
-		padding-left: var(--space-6);
-		border-left: var(--border-heavy) solid var(--color-gold);
-		font-family: var(--font-story);
-		font-size: var(--text-section);
-		font-style: italic;
-		line-height: 1.08;
-	}
-
-	blockquote p {
-		margin-bottom: 0;
 	}
 </style>

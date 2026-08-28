@@ -2,50 +2,12 @@
 	import ActionLink from "$lib/components/ActionLink.svelte";
 	import JamStatusPanel from "$lib/components/JamStatusPanel.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
-	import SectionHeading from "$lib/components/SectionHeading.svelte";
 	import { siteDetails } from "$lib/data/site-details";
-
-	const basics = [
-		{
-			title: "Show up when you can",
-			copy: "The first props usually land around 4ish. The busiest stretch is later in the evening.",
-		},
-		{
-			title: "Look for the totem pole",
-			copy: "The group gathers on the north side of Palmer Square Park. Hoops on the grass are another good clue.",
-		},
-		{
-			title: "Borrow before you buy",
-			copy: "Regulars bring extra props. Ask what is available and somebody can help you start.",
-		},
-		{
-			title: "Leave when you want",
-			copy: "Watch for ten minutes or stay until the lights come out. There is no class schedule to miss.",
-		},
-	];
-
-	const questions = [
-		{
-			question: "Is Tuesday guaranteed?",
-			answer:
-				"The calendar repeats every Tuesday in season. Weather can change the plan, so check the Facebook call before leaving home.",
-		},
-		{
-			question: "Do I need to know how to flow?",
-			answer:
-				"No. The park has beginners, working performers, curious neighbors, and people who mostly came to sit in the grass.",
-		},
-		{
-			question: "Are tacos there every week?",
-			answer:
-				"No. Taco nights have their own schedule. The flow jam still happens on the Tuesdays between them.",
-		},
-	];
 </script>
 
 <PageMeta
 	title="Taco Tuesday Flow Jam · Chicago"
-	description="Free flow arts in Palmer Square Park. Tuesdays 4ish–10ish, April through October. No signup, no experience needed, and props are available to borrow."
+	description="Free flow jam in Palmer Square Park. Tuesdays from 4ish to 10ish, April through October. Bring a prop or borrow one."
 	path="/"
 	home
 />
@@ -54,10 +16,10 @@
 	<section class="hero" aria-labelledby="page-title">
 		<div class="hero-grid">
 			<div class="identity">
-				<p class="kicker">Free park jam · Chicago · Since 2017</p>
-				<h1 id="page-title">Tuesday night belongs to the park.</h1>
+				<p class="kicker">Free weekly flow jam · Palmer Square Park</p>
+				<h1 id="page-title">Taco Tuesday Flow Jam</h1>
 				<p class="lede">
-					Free flow arts in Palmer Square. Come play, learn one move, or sit in the grass.
+					Tuesdays, 4ish to 10ish, April through October. All ages, all skill levels, no sign-up.
 				</p>
 			</div>
 			<JamStatusPanel />
@@ -81,26 +43,9 @@
 			</picture>
 			<figcaption>
 				<span>Palmer Square Park, Chicago</span>
-				<span>Find the totem pole. The props will be nearby.</span>
+				<span>North side, by the totem pole</span>
 			</figcaption>
 		</figure>
-	</section>
-
-	<section class="basics" aria-labelledby="basics-title">
-		<SectionHeading
-			kicker="How the night works"
-			title="No registration desk. No skill check."
-			description="The jam is closer to a weekly neighborhood picnic than a class or show."
-		/>
-		<div class="card-grid">
-			{#each basics as basic, index (basic.title)}
-				<article>
-					<span aria-hidden="true">0{index + 1}</span>
-					<h3 id={index === 0 ? "basics-title" : undefined}>{basic.title}</h3>
-					<p>{basic.copy}</p>
-				</article>
-			{/each}
-		</div>
 	</section>
 
 	<section class="first-time">
@@ -118,42 +63,17 @@
 					decoding="async"
 				/>
 			</picture>
-			<figcaption>There is always something strange to try.</figcaption>
+			<figcaption>Flow arts practice at Palmer Square Park</figcaption>
 		</figure>
 		<div>
-			<p class="kicker">Your first Tuesday</p>
-			<h2>You do not need to know what “flow arts” means.</h2>
-			<p>
-				Come empty-handed. Ask about poi, hoops, juggling, fans, staffs, or whatever odd object is
-				moving through the air. People share props and teach each other because that is the point.
-			</p>
+			<p class="kicker">First time</p>
+			<h2>No gear required.</h2>
+			<p>Bring a prop or ask before borrowing one at the park.</p>
 			<div class="actions">
-				<ActionLink href="/first-time">Read the first-timer guide</ActionLink>
+				<ActionLink href="/first-time">First-timer guide</ActionLink>
 				<ActionLink href={siteDetails.mapUrl} tone="outline" external>Open the map</ActionLink>
 			</div>
 		</div>
-	</section>
-
-	<section class="questions">
-		<SectionHeading kicker="Straight answers" title="The useful questions" />
-		<div class="question-grid">
-			{#each questions as item (item.question)}
-				<article>
-					<h3>{item.question}</h3>
-					<p>{item.answer}</p>
-				</article>
-			{/each}
-		</div>
-	</section>
-
-	<section class="explore">
-		<SectionHeading kicker="Keep looking" title="See the jam from another angle" />
-		<nav aria-label="Explore the site">
-			<a href="/gallery"><span>217 approved photos</span><strong>Open the gallery</strong></a>
-			<a href="/story"><span>Started in 2017</span><strong>Read the story</strong></a>
-			<a href="/tacos"><span>Not every Tuesday</span><strong>Find taco night</strong></a>
-			<a href="/chicago-flow"><span>The other six days</span><strong>More Chicago flow</strong></a>
-		</nav>
 	</section>
 </div>
 
@@ -232,51 +152,8 @@
 		font-weight: 750;
 	}
 
-	.basics,
-	.first-time,
-	.questions,
-	.explore {
+	.first-time {
 		margin-top: var(--section-gap);
-	}
-
-	.card-grid,
-	.question-grid,
-	.explore nav {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--card-min), 1fr));
-		gap: var(--space-4);
-	}
-
-	.card-grid article,
-	.question-grid article {
-		padding: var(--space-5);
-		border: var(--border-thin) solid var(--color-line);
-		background: var(--color-night-raised);
-	}
-
-	.card-grid span {
-		display: block;
-		margin-bottom: var(--space-6);
-		color: var(--color-red);
-		font-size: var(--text-small);
-		font-weight: 850;
-		letter-spacing: var(--tracking-label);
-	}
-
-	.card-grid h3,
-	.question-grid h3 {
-		margin-bottom: var(--space-3);
-		font-size: var(--text-card-title);
-		font-weight: 820;
-		letter-spacing: var(--tracking-card);
-		line-height: 1.08;
-	}
-
-	.card-grid p,
-	.question-grid p {
-		margin-bottom: 0;
-		color: var(--color-text-soft);
-		font-size: var(--text-small);
 	}
 
 	.first-time figure {
@@ -303,39 +180,5 @@
 		flex-wrap: wrap;
 		gap: var(--space-3);
 		margin-top: var(--space-6);
-	}
-
-	.explore nav a {
-		display: grid;
-		min-height: var(--status-reserve);
-		align-content: space-between;
-		padding: var(--space-5);
-		border: var(--border-medium) solid var(--color-line);
-		background: var(--color-night-panel);
-		text-decoration: none;
-		transition:
-			background var(--duration-normal) var(--ease-out),
-			border-color var(--duration-normal) var(--ease-out),
-			transform var(--duration-normal) var(--ease-out);
-	}
-
-	.explore nav a:hover {
-		border-color: var(--color-gold);
-		background: var(--color-night-soft);
-		transform: translateY(calc(var(--border-medium) * -1));
-	}
-
-	.explore span {
-		color: var(--color-text-muted);
-		font-size: var(--text-small);
-		font-weight: 750;
-		letter-spacing: var(--tracking-label);
-		text-transform: uppercase;
-	}
-
-	.explore strong {
-		color: var(--color-gold);
-		font-size: var(--text-card-title);
-		line-height: 1.12;
 	}
 </style>

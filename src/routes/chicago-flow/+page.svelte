@@ -7,16 +7,16 @@
 	const events = [
 		{
 			name: "Chicago Full Moon Jam",
-			when: "Summer full moons · sunset–10 PM",
-			where: "Chicago lakefront locations",
-			copy: "Free, family-friendly fire performances and drum circles. The organizer posts each location and date.",
+			when: "Summer full moons, sunset to 10 PM",
+			where: "Chicago locations posted by the organizer",
+			copy: "Free, family-friendly fire performances and drum circles.",
 			href: "https://www.fullmoonjam.org/",
 		},
 		{
 			name: "Flow Fest Chicago",
-			when: "Annual summer festival",
-			where: "2026: Ping Tom Memorial Park",
-			copy: "A public day of flow arts workshops, vendors, jams, and performances. Check the current event page before traveling.",
+			when: "August 29, 2026",
+			where: "Ping Tom Memorial Park",
+			copy: "Free entry. Workshops, vendors, jams, and performances. Paid workshop passes are available.",
 			href: "https://flowfests.com/chicago-2026/",
 		},
 		{
@@ -31,22 +31,19 @@
 
 <PageMeta
 	title="More Chicago flow"
-	description="Current organizer links for Chicago flow arts gatherings beyond Taco Tuesday, including Full Moon Jam and Flow Fest Chicago."
+	description="Organizer links for Chicago Full Moon Jam, Flow Fest Chicago, and local flow arts community posts."
 	path="/chicago-flow"
 />
 
 <div class="page">
 	<header>
-		<p class="kicker">The other six days</p>
-		<h1>More flow around Chicago.</h1>
-		<p>
-			These are organizer links, not copied calendars. Open the source before crossing the city.
-			Locations and dates can change.
-		</p>
+		<p class="kicker">Organizer links</p>
+		<h1>Chicago flow arts events</h1>
+		<p>Check each organizer's page for schedule and location updates.</p>
 	</header>
 
 	<section>
-		<SectionHeading kicker="Current sources" title="Start with the people running it" />
+		<SectionHeading kicker="Current sources" title="Event and community pages" />
 		<div class="grid">
 			{#each events as event (event.name)}
 				<article>

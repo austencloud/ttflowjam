@@ -6,49 +6,45 @@
 
 	const arrivalSteps = [
 		{
-			title: "Find the totem pole",
-			copy: "Head to the north side of Palmer Square Park. Look for hoops, blankets, and people making unusual shapes with sticks.",
+			title: "Find the meeting spot",
+			copy: "The jam meets by the totem pole on the north side of Palmer Square Park.",
 		},
 		{
-			title: "Put your bag down",
-			copy: "There is no check-in. Say hello, watch for a minute, and ask where there is room to play.",
+			title: "No check-in",
+			copy: "The jam is free and does not require registration.",
 		},
 		{
-			title: "Ask to try something",
-			copy: "Extra props circulate through the park. Ask before grabbing, then ask for one small move to start with.",
+			title: "Borrowing props",
+			copy: "Ask the owner before using another person's prop.",
 		},
 		{
-			title: "Make the night yours",
-			copy: "Practice, talk, picnic, or just watch. You are not holding up a class and nobody is scoring you.",
+			title: "Open practice",
+			copy: "This is an open jam, not a scheduled class.",
 		},
 	];
 
 	const packingList = [
 		"Water and a layer for after sunset",
-		"Sunscreen or bug spray when the evening calls for it",
-		"A prop you already own, if you want to bring one",
-		"Food for yourself, unless the taco schedule says otherwise",
+		"Sunscreen and bug spray",
+		"A prop, if you have one",
+		"Food, except on a published taco night",
 	];
 </script>
 
 <PageMeta
-	title="Your first Tuesday"
+	title="First-time guide"
 	description="A first-timer guide to Taco Tuesday Flow Jam: where to meet, when to arrive, what to bring, and how borrowing props works."
 	path="/first-time"
 />
 
 <div class="page">
 	<header class="intro">
-		<p class="kicker">First-timer guide</p>
-		<h1>Come curious. The rest is optional.</h1>
-		<p>
-			You do not need gear, a teacher, or a reason to be good at this. Taco Tuesday is a public park
-			hang where people practice together and lend each other props.
-		</p>
+		<p class="kicker">First time</p>
+		<h1>First-time guide</h1>
+		<p>No signup or gear is required. Taco Tuesday is an open flow arts jam in a public park.</p>
 		<div class="actions">
 			<ActionLink href={siteDetails.mapUrl} external>Map the meeting spot</ActionLink>
-			<ActionLink href={siteDetails.facebookUrl} tone="outline" external
-				>Check the weather call</ActionLink
+			<ActionLink href={siteDetails.facebookUrl} tone="outline" external>Weather updates</ActionLink
 			>
 		</div>
 	</header>
@@ -66,15 +62,11 @@
 				fetchpriority="high"
 			/>
 		</picture>
-		<figcaption>Bring your own strange object, or meet one there.</figcaption>
+		<figcaption>Flow arts practice at Palmer Square Park</figcaption>
 	</figure>
 
 	<section class="arrival">
-		<SectionHeading
-			kicker="When you get there"
-			title="There is no front door."
-			description="The gathering is loose by design. These four steps are enough to get oriented."
-		/>
+		<SectionHeading kicker="Arrival" title="What to expect" />
 		<ol>
 			{#each arrivalSteps as step, index (step.title)}
 				<li>
@@ -90,43 +82,32 @@
 
 	<section class="bring">
 		<div>
-			<SectionHeading kicker="Pack light" title="Useful, not required" />
+			<SectionHeading kicker="Before you go" title="Useful to bring" />
 			<ul>
 				{#each packingList as item (item)}
 					<li>{item}</li>
 				{/each}
 			</ul>
 		</div>
-		<aside>
-			<p class="label">Leave these at home</p>
-			<p class="big">The idea that everyone is watching you.</p>
-			<p>Most people are busy dropping their own props. Beginner mistakes blend right in.</p>
-		</aside>
 	</section>
 
 	<section class="answers">
-		<SectionHeading kicker="Before you leave home" title="A few honest limits" />
+		<SectionHeading kicker="Current information" title="Weather, access, and tacos" />
 		<div>
 			<article>
 				<h2>Weather</h2>
-				<p>
-					This site shows the repeating calendar, not a live organizer decision. Facebook is where
-					the current call appears.
-				</p>
+				<p>This site shows the regular schedule. Weather updates are posted on Facebook.</p>
 			</article>
 			<article>
 				<h2>Access questions</h2>
 				<p>
-					The group gathers on park grass. Message the Facebook page if you need a specific access
-					answer before coming.
+					The meeting area is on park grass. Message the Facebook page with specific access
+					questions.
 				</p>
 			</article>
 			<article>
 				<h2>Tacos</h2>
-				<p>
-					Food is not there every week. Check the taco schedule instead of arriving hungry on faith
-					alone.
-				</p>
+				<p>Tacos are served only on the published taco nights.</p>
 			</article>
 		</div>
 		<ActionLink href="/tacos" tone="quiet">See the taco schedule</ActionLink>
@@ -145,8 +126,7 @@
 		padding-bottom: var(--space-7);
 	}
 
-	.kicker,
-	.label {
+	.kicker {
 		margin-bottom: var(--space-3);
 		color: var(--color-gold);
 		font-size: var(--text-small);
@@ -241,10 +221,7 @@
 	}
 
 	.bring {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--feature-min), 1fr));
-		gap: var(--space-7);
-		align-items: start;
+		max-width: var(--reading-width);
 	}
 
 	.bring ul {
@@ -256,31 +233,6 @@
 		padding: var(--space-4);
 		border-left: var(--border-heavy) solid var(--color-gold);
 		background: var(--color-night-raised);
-	}
-
-	.bring aside {
-		padding: var(--space-6);
-		border: var(--border-heavy) solid var(--color-paper-ink);
-		background-color: var(--color-paper);
-		background-image: var(--texture-paper);
-		box-shadow: var(--shadow-panel);
-		color: var(--color-paper-ink);
-	}
-
-	.bring aside .label {
-		color: var(--color-red-deep);
-	}
-
-	.big {
-		margin-bottom: var(--space-5);
-		font-family: var(--font-story);
-		font-size: var(--text-section);
-		font-weight: 620;
-		line-height: 1;
-	}
-
-	.bring aside p:last-child {
-		margin-bottom: 0;
 	}
 
 	.answers > div {

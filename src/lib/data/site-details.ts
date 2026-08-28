@@ -1,7 +1,7 @@
 export const siteDetails = {
 	name: "Taco Tuesday Flow Jam",
 	shortName: "Taco Tuesday",
-	schedule: "Tuesdays, 4ish–10ish · April–October",
+	schedule: "Tuesdays, 4ish to 10ish, April through October",
 	location: "Palmer Square Park, by the totem pole on the north side",
 	mapUrl: "https://www.google.com/maps/search/?api=1&query=Palmer+Square+Park+totem+pole+Chicago",
 	facebookUrl: "https://www.facebook.com/flowtaco",
