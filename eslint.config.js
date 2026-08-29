@@ -21,5 +21,19 @@ export default tseslint.config(
 			],
 			"@typescript-eslint/no-explicit-any": "warn",
 		},
+	},
+	{
+		files: ["scripts/**/*.mjs"],
+		languageOptions: {
+			globals: {
+				Buffer: "readonly",
+				console: "readonly",
+				fetch: "readonly",
+				process: "readonly",
+			},
+		},
+		rules: {
+			"no-console": "off",
+		},
 	}
 );
