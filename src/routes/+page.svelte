@@ -1,13 +1,14 @@
 <script lang="ts">
 	import ActionLink from "$lib/components/ActionLink.svelte";
+	import GroupPhotoCarousel from "$lib/components/GroupPhotoCarousel.svelte";
 	import JamStatusPanel from "$lib/components/JamStatusPanel.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
-	import { siteDetails } from "$lib/data/site-details";
+	import { siteDetails, tacoNights2026 } from "$lib/data/site-details";
 </script>
 
 <PageMeta
 	title="Taco Tuesday Flow Jam · Chicago"
-	description="Free flow jam in Palmer Square Park. Tuesdays from 4ish to 10ish, April through October. Bring a prop or borrow one."
+	description="Free flow jam in Palmer Square Park. Tuesdays from 4ish to 10ish, April through October."
 	path="/"
 	home
 />
@@ -16,64 +17,34 @@
 	<section class="hero" aria-labelledby="page-title">
 		<div class="hero-grid">
 			<div class="identity">
-				<p class="kicker">Free weekly flow jam · Palmer Square Park</p>
-				<h1 id="page-title">Taco Tuesday Flow Jam</h1>
-				<p class="lede">
-					Tuesdays, 4ish to 10ish, April through October. All ages, all skill levels, no sign-up.
-				</p>
+				<img src="/media/tacocat.png" alt="" width="512" height="512" />
+				<h1 id="page-title">
+					<span>Taco Tuesday</span>
+					<span class="flow-jam">Flow Jam</span>
+				</h1>
 			</div>
-			<JamStatusPanel />
+			<div class="status">
+				<JamStatusPanel />
+			</div>
 		</div>
 
-		<figure class="hero-photo">
-			<picture>
-				<source
-					srcset="/media/park-noticeboard/hero-group-1200.webp 1200w, /media/park-noticeboard/hero-group-1920.webp 1920w"
-					media="(min-width: 48rem)"
-				/>
-				<img
-					src="/media/park-noticeboard/hero-group-720.webp"
-					srcset="/media/park-noticeboard/hero-group-720.webp 720w, /media/park-noticeboard/hero-group-1200.webp 1200w"
-					sizes="100vw"
-					alt="A large group of Taco Tuesday Flow Jam regulars holding hoops, juggling clubs, and staffs beside the Palmer Square totem pole"
-					width="1920"
-					height="1279"
-					fetchpriority="high"
-				/>
-			</picture>
-			<figcaption>
-				<span>Palmer Square Park, Chicago</span>
-				<span>North side, by the totem pole</span>
-			</figcaption>
-		</figure>
+		<GroupPhotoCarousel />
 	</section>
 
-	<section class="first-time">
-		<figure>
-			<picture>
-				<source
-					srcset="/media/park-noticeboard/first-time-720.webp 720w, /media/park-noticeboard/first-time-1400.webp 1400w"
-				/>
-				<img
-					src="/media/park-noticeboard/first-time-720.webp"
-					alt="A flow artist practicing with two flower-shaped props while another balances nearby in Palmer Square Park"
-					width="1400"
-					height="1100"
-					loading="lazy"
-					decoding="async"
-				/>
-			</picture>
-			<figcaption>Flow arts practice at Palmer Square Park</figcaption>
-		</figure>
-		<div>
-			<p class="kicker">First time</p>
-			<h2>No gear required.</h2>
-			<p>Bring a prop or ask before borrowing one at the park.</p>
-			<div class="actions">
-				<ActionLink href="/first-time">First-timer guide</ActionLink>
-				<ActionLink href={siteDetails.mapUrl} tone="outline" external>Open the map</ActionLink>
+	<section class="tacos" aria-labelledby="taco-title">
+		<div class="taco-copy">
+			<p class="kicker">2026 taco dates</p>
+			<h2 id="taco-title">Every other Tuesday.</h2>
+			<div class="taco-details">
+				<p>Food starts around 6ish. $5 if you eat.</p>
+				<ActionLink href={siteDetails.paypalUrl} tone="outline" external>Taco fund</ActionLink>
 			</div>
 		</div>
+		<ol aria-label="2026 taco dates">
+			{#each tacoNights2026 as night (night.iso)}
+				<li><time datetime={night.iso}>{night.label}</time></li>
+			{/each}
+		</ol>
 	</section>
 </div>
 
@@ -84,27 +55,63 @@
 	}
 
 	.hero {
-		padding-top: var(--space-5);
-	}
-
-	.hero-grid,
-	.first-time {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--feature-min), 1fr));
-		gap: var(--space-7);
-		align-items: center;
+		padding-top: clamp(var(--space-5), 3vw, var(--space-7));
 	}
 
 	.hero-grid {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		gap: var(--space-5);
 	}
 
 	.identity {
-		padding-block: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(var(--space-2), 2.4vw, var(--space-5));
+		width: 100%;
+	}
+
+	.identity img {
+		width: clamp(5rem, 8vw, 7.5rem);
+		height: auto;
+		flex: 0 0 auto;
+	}
+
+	h1 {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		margin-bottom: 0;
+		font-size: clamp(2.7rem, 1.55rem + 4.1vw, 6.5rem);
+		font-weight: 900;
+		line-height: 0.82;
+		text-align: left;
+		text-transform: uppercase;
+	}
+
+	h1 .flow-jam {
+		color: var(--theme-accent);
+		font-size: 0.58em;
+		letter-spacing: 0.16em;
+		line-height: 1.2;
+	}
+
+	.status {
+		width: min(100%, 44rem);
+	}
+
+	.tacos {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--feature-min), 1fr));
+		gap: var(--space-7);
+		align-items: center;
+		margin-top: clamp(var(--space-5), 2.5vw, var(--space-7));
 	}
 
 	.kicker {
-		margin-bottom: var(--space-3);
+		margin: 0;
 		color: var(--color-gold);
 		font-size: var(--text-small);
 		font-weight: 820;
@@ -112,73 +119,93 @@
 		text-transform: uppercase;
 	}
 
-	h1 {
-		max-width: var(--reading-width);
-		margin-bottom: var(--space-5);
-		font-size: var(--text-display);
-		font-weight: 900;
-	}
-
-	.lede {
-		max-width: var(--reading-width);
+	.taco-copy h2 {
 		margin-bottom: 0;
-		color: var(--color-text-soft);
-		font-size: var(--text-lede);
-	}
-
-	.hero-photo {
-		margin-top: var(--space-7);
-		border: var(--border-heavy) solid var(--color-paper);
-		background: var(--color-paper);
-		box-shadow: var(--shadow-photo);
-	}
-
-	.hero-photo img,
-	.first-time img {
-		display: block;
-		width: 100%;
-	}
-
-	.hero-photo figcaption,
-	.first-time figcaption {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: var(--space-2) var(--space-5);
-		padding: var(--space-3) var(--space-4);
-		background: var(--color-paper);
-		color: var(--color-paper-ink);
-		font-size: var(--text-small);
-		font-weight: 750;
-	}
-
-	.first-time {
-		margin-top: var(--section-gap);
-	}
-
-	.first-time figure {
-		margin: 0;
-		border: var(--border-heavy) solid var(--color-paper);
-		background: var(--color-paper);
-		transform: rotate(var(--photo-tilt));
-	}
-
-	.first-time h2 {
-		margin-bottom: var(--space-5);
 		font-size: var(--text-section);
 		font-weight: 880;
 	}
 
-	.first-time p:not(.kicker) {
-		max-width: var(--reading-width);
+	.taco-details {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3) var(--space-4);
+		margin-top: var(--space-4);
+	}
+
+	.taco-details p {
+		margin: 0;
 		color: var(--color-text-soft);
 		font-size: var(--text-lede);
 	}
 
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-		margin-top: var(--space-6);
+	ol {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		padding-block: var(--space-3);
+		border-top: var(--border-thin) solid var(--theme-stroke-strong);
+	}
+
+	time {
+		display: block;
+		font-size: var(--text-card-title);
+		font-weight: 820;
+		letter-spacing: var(--tracking-card);
+	}
+
+	@media (min-width: 64rem) {
+		ol {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 105rem) {
+		.hero-grid {
+			display: grid;
+			grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+			gap: var(--space-8);
+			width: min(100%, 120rem);
+			margin-inline: auto;
+		}
+
+		.identity {
+			justify-content: flex-start;
+		}
+
+		.status {
+			width: 100%;
+		}
+	}
+
+	@media (min-width: 48rem) and (max-height: 35rem) {
+		.hero {
+			padding-top: var(--space-4);
+		}
+
+		.hero-grid {
+			display: grid;
+			grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+			gap: var(--space-5);
+			align-items: center;
+		}
+
+		.identity {
+			gap: var(--space-3);
+		}
+
+		.identity img {
+			width: 5rem;
+		}
+
+		h1 {
+			font-size: clamp(2.4rem, 5vw, 3.6rem);
+		}
 	}
 </style>

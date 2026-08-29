@@ -1,17 +1,12 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import { formatJamDate, jamStatus } from "$lib/services/jam-status";
 
 	const links = [
-		{ href: "/", label: "Jam" },
-		{ href: "/first-time", label: "First time" },
+		{ href: "/", label: "Info" },
 		{ href: "/gallery", label: "Gallery" },
-		{ href: "/story", label: "History" },
-		{ href: "/tacos", label: "Tacos" },
+		{ href: "/help-out", label: "Help out" },
 	];
 
-	const status = jamStatus(new Date());
-	const dateLabel = status.state === "today" ? "Tonight" : formatJamDate(status.nextJam, "short");
 	const isActive = (href: string) =>
 		href === "/" ? page.url.pathname === "/" : page.url.pathname.startsWith(href);
 </script>
@@ -19,28 +14,19 @@
 <a class="skip" href="#content">Skip to the page</a>
 
 <header>
-	<div class="top">
-		<a class="brand" href="/" aria-label="Taco Tuesday Flow Jam home">Taco Tuesday</a>
-		<a class="status" href="/#jam-status">
-			<span class="signal" aria-hidden="true"></span>
-			<strong>No weather update</strong>
-			<b>{dateLabel}</b>
-			<span class="sr-only">Weather update not posted. {dateLabel} is the scheduled date.</span>
-		</a>
-	</div>
-	<nav aria-label="Main navigation">
-		<div>
+	<div class="bar">
+		<nav aria-label="Main navigation">
 			{#each links as link (link.href)}
 				<a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>{link.label}</a>
 			{/each}
-		</div>
-	</nav>
+		</nav>
+	</div>
 </header>
 
 <style>
 	.skip {
 		position: fixed;
-		top: var(--space-3);
+		top: 0;
 		left: var(--space-3);
 		z-index: calc(var(--z-header) + 1);
 		min-height: var(--min-touch-target);
@@ -48,11 +34,11 @@
 		background: var(--color-paper);
 		color: var(--color-paper-ink);
 		font-weight: 800;
-		transform: translateY(calc((var(--header-offset) + var(--space-4)) * -1));
+		transform: translateY(-120%);
 	}
 
 	.skip:focus-visible {
-		transform: translateY(0);
+		transform: translateY(var(--space-3));
 	}
 
 	header {
@@ -60,25 +46,19 @@
 		top: 0;
 		z-index: var(--z-header);
 		border-bottom: var(--border-thin) solid var(--color-line);
-		background: var(--color-night);
+		background: color-mix(in srgb, var(--theme-page-bg) 88%, transparent);
+		backdrop-filter: blur(1rem);
 	}
 
-	.top,
-	nav > div {
+	.bar {
 		width: var(--shell-width);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: var(--min-touch-target);
 		margin-inline: auto;
 	}
 
-	.top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-3);
-		min-height: var(--min-touch-target);
-	}
-
-	.brand,
-	.status,
 	nav a {
 		font-size: var(--text-small);
 		font-weight: 820;
@@ -88,78 +68,39 @@
 		text-transform: uppercase;
 	}
 
-	.brand {
-		min-width: 0;
-		overflow: hidden;
-		color: var(--color-text);
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.status {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-2);
-		min-height: var(--min-touch-target);
-		color: var(--color-text-soft);
-		white-space: nowrap;
-	}
-
-	.status .signal {
-		width: var(--space-3);
-		height: var(--space-3);
-		border: var(--border-medium) solid var(--color-text);
-		border-radius: var(--radius-round);
-		background: var(--color-red);
-	}
-
-	.sr-only {
-		position: absolute;
-		width: var(--border-thin);
-		height: var(--border-thin);
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-	}
-
-	.status strong {
-		color: var(--color-red);
-	}
-
-	.status b {
-		color: var(--color-gold);
-	}
-
 	nav {
-		border-top: var(--border-thin) solid var(--color-line-soft);
-	}
-
-	nav > div {
 		display: flex;
-		overflow-x: auto;
-		scrollbar-width: thin;
+		gap: var(--space-4);
 	}
 
 	nav a {
+		position: relative;
 		display: inline-flex;
 		flex: 0 0 auto;
 		align-items: center;
 		min-height: var(--min-touch-target);
-		padding-inline: var(--space-4);
-		border-right: var(--border-thin) solid var(--color-line-soft);
+		padding-inline: var(--space-2);
 		color: var(--color-text-soft);
-		transition:
-			background var(--duration-fast) var(--ease-out),
-			color var(--duration-fast) var(--ease-out);
+		transition: color var(--duration-fast) var(--ease-out);
 	}
 
-	nav a:first-child {
-		border-left: var(--border-thin) solid var(--color-line-soft);
+	nav a::after {
+		position: absolute;
+		right: var(--space-2);
+		bottom: 0;
+		left: var(--space-2);
+		height: var(--border-medium);
+		background: transparent;
+		content: "";
+		transition: background var(--duration-fast) var(--ease-out);
 	}
 
 	nav a:hover,
 	nav a[aria-current="page"] {
-		background: var(--color-paper);
-		color: var(--color-paper-ink);
+		color: var(--theme-text);
+	}
+
+	nav a[aria-current="page"]::after {
+		background: var(--theme-accent);
 	}
 </style>

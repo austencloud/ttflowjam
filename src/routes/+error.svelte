@@ -16,7 +16,6 @@
 	<p>{page.error?.message ?? "The requested page could not be found."}</p>
 	<div>
 		<ActionLink href="/">Back to the jam page</ActionLink>
-		<ActionLink href="/first-time" tone="outline">First-timer guide</ActionLink>
 	</div>
 </section>
 

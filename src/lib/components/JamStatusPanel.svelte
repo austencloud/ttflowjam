@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ActionLink from "$lib/components/ActionLink.svelte";
+	import MapDialog from "$lib/components/MapDialog.svelte";
 	import { siteDetails } from "$lib/data/site-details";
 	import { formatJamDate, jamStatus } from "$lib/services/jam-status";
 
@@ -16,18 +16,9 @@
 <section id="jam-status" aria-labelledby="jam-status-title">
 	<div class="topline">
 		<p>{lead}</p>
-		<span>Scheduled date</span>
 	</div>
 	<h2 id="jam-status-title">{dateLabel}</h2>
-	<p class="schedule">4ish to 10ish · free</p>
-
-	<div class="call">
-		<span aria-hidden="true"></span>
-		<div>
-			<strong>No weather update posted</strong>
-			<p>Weather updates are posted on Facebook.</p>
-		</div>
-	</div>
+	<p class="schedule">4ish to 10ish</p>
 
 	<dl>
 		<div>
@@ -35,31 +26,27 @@
 			<dd>{siteDetails.location}</dd>
 		</div>
 		<div>
-			<dt>Who</dt>
-			<dd>All ages and skill levels. No signup.</dd>
+			<dt>Season</dt>
+			<dd>Every Tuesday, April through October</dd>
 		</div>
 		<div>
-			<dt>Gear</dt>
-			<dd>Bring a prop or borrow one at the park.</dd>
+			<dt>Details</dt>
+			<dd>Free. All ages and skill levels. No signup.</dd>
 		</div>
 	</dl>
 
-	<div class="actions">
-		<ActionLink href={siteDetails.mapUrl} tone="ink" external>Open map</ActionLink>
-		<ActionLink href={siteDetails.facebookUrl} tone="outline" external>Weather updates</ActionLink>
-	</div>
+	<MapDialog />
 </section>
 
 <style>
 	section {
 		min-height: var(--status-reserve);
-		padding: var(--space-5);
-		border: var(--border-heavy) solid var(--color-paper-ink);
-		border-radius: var(--radius-small);
-		background-color: var(--color-paper);
-		background-image: var(--texture-paper);
+		padding: clamp(var(--space-4), 3vw, var(--space-5));
+		border: var(--border-thin) solid var(--theme-stroke);
+		border-radius: var(--radius-large);
+		background: var(--theme-panel-bg);
 		box-shadow: var(--shadow-panel);
-		color: var(--color-paper-ink);
+		color: var(--theme-text);
 	}
 
 	.topline {
@@ -69,11 +56,10 @@
 		justify-content: space-between;
 		gap: var(--space-2) var(--space-4);
 		margin-bottom: var(--space-2);
-		border-bottom: var(--border-medium) solid var(--color-paper-ink);
+		border-bottom: var(--border-thin) solid var(--theme-stroke);
 	}
 
 	.topline p,
-	.topline span,
 	.schedule,
 	dt {
 		font-size: var(--text-small);
@@ -84,11 +70,7 @@
 
 	.topline p {
 		margin-bottom: var(--space-2);
-	}
-
-	.topline span {
-		margin-bottom: var(--space-2);
-		color: var(--color-red-deep);
+		color: var(--theme-accent);
 	}
 
 	h2 {
@@ -98,43 +80,13 @@
 	}
 
 	.schedule {
-		margin-bottom: var(--space-5);
-	}
-
-	.call {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: var(--space-3);
-		padding: var(--space-4);
-		border: var(--border-medium) solid var(--color-red-deep);
-		background: var(--color-paper-deep);
-	}
-
-	.call > span {
-		width: var(--space-3);
-		height: var(--space-3);
-		margin-top: var(--space-1);
-		border: var(--border-medium) solid var(--color-paper-ink);
-		border-radius: var(--radius-round);
-		background: var(--color-red);
-	}
-
-	.call strong {
-		display: block;
-		font-size: var(--text-card-title);
-		line-height: 1.05;
-	}
-
-	.call p {
-		margin: var(--space-2) 0 0;
-		font-size: var(--text-small);
-		line-height: 1.4;
+		margin-bottom: var(--space-4);
 	}
 
 	dl {
 		display: grid;
 		gap: 0;
-		margin-block: var(--space-5);
+		margin-block: var(--space-4);
 	}
 
 	dl div {
@@ -142,7 +94,7 @@
 		grid-template-columns: minmax(var(--space-8), auto) 1fr;
 		gap: var(--space-4);
 		padding-block: var(--space-3);
-		border-bottom: var(--border-thin) solid var(--color-paper-ink);
+		border-bottom: var(--border-thin) solid var(--theme-stroke);
 	}
 
 	dt,
@@ -155,15 +107,26 @@
 		font-weight: 650;
 	}
 
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-	}
+	@media (min-width: 48rem) and (max-height: 35rem) {
+		section {
+			min-height: 0;
+			padding: var(--space-4);
+		}
 
-	.actions :global(.outline) {
-		border-color: var(--color-paper-ink);
-		background: transparent;
-		color: var(--color-paper-ink);
+		h2 {
+			font-size: clamp(2rem, 4vw, 3rem);
+		}
+
+		.schedule {
+			margin-bottom: var(--space-2);
+		}
+
+		dl {
+			margin-block: var(--space-2);
+		}
+
+		dl div {
+			padding-block: var(--space-2);
+		}
 	}
 </style>

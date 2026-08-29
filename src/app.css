@@ -1,34 +1,41 @@
 @layer thirdparty, base, overrides;
 
 :root {
-	--color-night: #091321;
-	--color-night-raised: #111f31;
-	--color-night-panel: #182a3f;
-	--color-night-soft: #223750;
-	--color-paper: #f2dfa8;
-	--color-paper-deep: #d7bc73;
-	--color-paper-ink: #15191d;
-	--color-text: #fff9e9;
-	--color-text-soft: #d5d0c3;
-	--color-text-muted: #aaa89f;
-	--color-gold: #ffd36a;
-	--color-red: #ff6955;
-	--color-red-deep: #c63f35;
-	--color-green: #77dc8d;
-	--color-line: #42536a;
-	--color-line-soft: rgb(255 249 233 / 0.14);
+	--theme-page-bg: #0b0b10;
+	--theme-panel-bg: #14141c;
+	--theme-card-bg: #1a1a24;
+	--theme-card-hover-bg: #22222e;
+	--theme-accent: #9b8cff;
+	--theme-accent-strong: #7b6be2;
+	--theme-text: #f5f5f7;
+	--theme-text-soft: #c9c9d1;
+	--theme-text-muted: #9d9daa;
+	--theme-stroke: rgb(255 255 255 / 0.11);
+	--theme-stroke-strong: rgb(255 255 255 / 0.22);
+	--semantic-success: #6ee7a7;
+
+	--color-night: var(--theme-page-bg);
+	--color-night-raised: var(--theme-panel-bg);
+	--color-night-panel: var(--theme-card-bg);
+	--color-night-soft: var(--theme-card-hover-bg);
+	--color-paper: var(--theme-accent);
+	--color-paper-deep: var(--theme-accent-strong);
+	--color-paper-ink: #0b0b10;
+	--color-text: var(--theme-text);
+	--color-text-soft: var(--theme-text-soft);
+	--color-text-muted: var(--theme-text-muted);
+	--color-gold: var(--theme-accent);
+	--color-red: var(--theme-accent);
+	--color-red-deep: var(--theme-accent-strong);
+	--color-green: var(--semantic-success);
+	--color-line: var(--theme-stroke);
+	--color-line-soft: var(--theme-stroke);
 	--color-shadow: rgb(0 0 0 / 0.42);
-	--color-photo-scrim: rgb(9 19 33 / 0.72);
-	--texture-page:
-		radial-gradient(circle at 16% 12%, rgb(255 211 106 / 0.055), transparent 32%),
-		radial-gradient(circle at 84% 24%, rgb(255 105 85 / 0.045), transparent 28%),
-		linear-gradient(rgb(255 255 255 / 0.018) 1px, transparent 1px);
-	--texture-paper:
-		radial-gradient(circle at 18% 22%, rgb(255 255 255 / 0.35), transparent 28%),
-		repeating-linear-gradient(7deg, rgb(21 25 29 / 0.035) 0 1px, transparent 1px 5px);
+	--color-photo-scrim: rgb(11 11 16 / 0.78);
+	--texture-page: none;
+	--texture-paper: none;
 
 	--font-body: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
-	--font-story: "Fraunces Variable", Georgia, serif;
 	--font-size-min: 0.875rem;
 	--text-small: clamp(0.875rem, 0.84rem + 0.12vw, 1rem);
 	--text-body: clamp(1rem, 0.95rem + 0.18vw, 1.2rem);
@@ -63,23 +70,26 @@
 	--hero-photo-min: 18rem;
 	--closing-min: 18rem;
 	--min-touch-target: 2.75rem;
-	--header-offset: 6.75rem;
+	--header-offset: 2.75rem;
 	--status-reserve: 18rem;
+	--map-dialog-width: 72rem;
+	--map-frame-height: min(60svh, 44rem);
+	--map-frame-min-height: 20rem;
 
 	--border-thin: 0.0625rem;
 	--border-medium: 0.125rem;
 	--border-heavy: 0.25rem;
-	--radius-small: 0.25rem;
-	--radius-medium: 0.7rem;
+	--radius-small: 0.65rem;
+	--radius-medium: 0.85rem;
 	--radius-large: 1.15rem;
 	--radius-round: 999rem;
-	--shadow-panel: 0.75rem 0.75rem 0 var(--color-shadow);
-	--shadow-photo: 1rem 1rem 0 rgb(255 105 85 / 0.72);
+	--shadow-panel: 0 0.75rem 2rem rgb(0 0 0 / 0.28);
+	--shadow-photo: 0 1rem 3rem rgb(0 0 0 / 0.34);
 
 	--duration-fast: 150ms;
 	--duration-normal: 240ms;
 	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-	--focus-ring: 0 0 0 0.2rem var(--color-night), 0 0 0 0.42rem var(--color-gold);
+	--focus-ring: 0 0 0 0.18rem var(--color-night), 0 0 0 0.38rem var(--theme-accent);
 	--z-header: 50;
 }
 
@@ -100,10 +110,6 @@
 		margin: 0;
 		background-color: var(--color-night);
 		background-image: var(--texture-page);
-		background-size:
-			auto,
-			auto,
-			2rem 2rem;
 		color: var(--color-text);
 		font-family: var(--font-body);
 		font-size: var(--text-body);

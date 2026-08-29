@@ -1,12 +1,9 @@
 <script lang="ts">
 	import "@fontsource-variable/inter";
-	import "@fontsource-variable/fraunces/full.css";
-	import "@fontsource-variable/fraunces/full-italic.css";
 	import "../app.css";
 	import type { Snippet } from "svelte";
 	import Footer from "$lib/components/Footer.svelte";
 	import Header from "$lib/components/Header.svelte";
-	import JamClosingPanel from "$lib/components/JamClosingPanel.svelte";
 
 	interface Props {
 		children: Snippet;
@@ -16,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<meta name="theme-color" content="#091321" />
+	<meta name="theme-color" content="#0b0b10" />
 	<script type="application/ld+json">
 		{
 			"@context": "https://schema.org",
@@ -47,7 +44,6 @@
 <main id="content">
 	{@render children()}
 </main>
-<JamClosingPanel />
 <Footer />
 
 <style>
