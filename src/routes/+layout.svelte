@@ -4,6 +4,7 @@
 	import type { Snippet } from "svelte";
 	import Footer from "$lib/components/Footer.svelte";
 	import Header from "$lib/components/Header.svelte";
+	import RouteTransition from "$lib/components/RouteTransition.svelte";
 
 	interface Props {
 		children: Snippet;
@@ -40,6 +41,7 @@
 	</script>
 </svelte:head>
 
+<RouteTransition />
 <Header />
 <main id="content">
 	{@render children()}
