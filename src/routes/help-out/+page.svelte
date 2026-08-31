@@ -277,6 +277,9 @@
 									{:else}
 										<ul class="signups">
 											{#each selectedJamSignups as signup (signup.id)}
+												{@const visibleCommitments = signup.helpingWith.filter(
+													(commitment) => commitment !== "Bringing something"
+												)}
 												<li
 													animate:flip={{
 														duration: prefersReducedMotion ? 0 : listMotionDuration,
@@ -284,26 +287,27 @@
 													class:just-added={celebratedSignupIds.has(signup.id)}
 												>
 													<div class="signup-name-row">
-														<strong>{signup.name}</strong>
+														<p class="signup-summary">
+															<strong>{signup.name}</strong>
+															{#if signup.bringing}
+																<span>{signup.bringing}</span>
+															{/if}
+														</p>
 														{#if celebratedSignupIds.has(signup.id)}
 															<span class="added-badge" aria-hidden="true">✓ Added</span>
 														{/if}
 													</div>
-													{#if signup.helpingWith.length > 0}
+													{#if visibleCommitments.length > 0}
 														<ul class="commitments" aria-label={`${signup.name} is helping with`}>
-															{#each signup.helpingWith as commitment}
+															{#each visibleCommitments as commitment}
 																<li
 																	class:setup={commitment === "Set up"}
 																	class:cleanup={commitment === "Clean up"}
-																	class:contribution={commitment === "Bringing something"}
 																>
 																	{commitment}
 																</li>
 															{/each}
 														</ul>
-													{/if}
-													{#if signup.bringing}
-														<p class="bringing"><span>Bringing</span> {signup.bringing}</p>
 													{/if}
 												</li>
 											{/each}
@@ -838,9 +842,22 @@
 
 	.signup-name-row {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-between;
 		gap: var(--space-3);
+	}
+
+	.signup-summary {
+		display: flex;
+		min-width: 0;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--space-2) var(--space-3);
+		margin: 0;
+	}
+
+	.signup-summary span {
+		color: var(--theme-text-soft);
 	}
 
 	.added-badge {
@@ -880,23 +897,6 @@
 		border-color: color-mix(in srgb, var(--semantic-success) 48%, transparent);
 		background: color-mix(in srgb, var(--semantic-success) 11%, var(--theme-card-bg));
 		color: color-mix(in srgb, var(--semantic-success) 78%, var(--theme-text));
-	}
-
-	.commitments li.contribution {
-		border-color: color-mix(in srgb, var(--theme-spark) 48%, transparent);
-		background: color-mix(in srgb, var(--theme-spark) 11%, var(--theme-card-bg));
-		color: color-mix(in srgb, var(--theme-spark) 72%, var(--theme-text));
-	}
-
-	.bringing {
-		margin: 0;
-		color: var(--theme-text-soft);
-	}
-
-	.bringing span {
-		margin-right: var(--space-2);
-		color: var(--theme-accent);
-		font-weight: 750;
 	}
 
 	.signup-list-footer {
