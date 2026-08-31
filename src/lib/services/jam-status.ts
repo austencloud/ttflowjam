@@ -117,3 +117,16 @@ export function formatJamDate(date: CivilDate, style: "short" | "long" = "long")
 export function civilDateToIso(date: CivilDate): string {
 	return `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
 }
+
+export function upcomingJamDates(now: Date): CivilDate[] {
+	const firstJam = jamStatus(now).nextJam;
+	const dates: CivilDate[] = [];
+	let date = firstJam;
+
+	while (date.year === firstJam.year && date.month <= SEASON_LAST_MONTH) {
+		dates.push(date);
+		date = addDays(date, 7);
+	}
+
+	return dates;
+}

@@ -5,6 +5,7 @@
 	import EmbeddedGoogleForm from "$lib/components/EmbeddedGoogleForm.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
 	import { siteDetails } from "$lib/data/site-details";
+	import { withGoogleFormJamDate } from "$lib/services/google-form-jam-date";
 	import { findNewSignupIds } from "$lib/services/help-out-signup-updates";
 	import type { HelpOutSignup } from "$lib/services/help-out-signups";
 	import type { PageData } from "./$types";
@@ -17,7 +18,49 @@
 	let signupList: HTMLElement;
 	let prefersReducedMotion = $state(false);
 	let selectedChoice = $state<"pitch-in" | "classes" | null>(null);
+	let selectedJamDateOverride = $state<string | null>(null);
 	let refreshRun = 0;
+	let selectedJamDate = $derived(selectedJamDateOverride ?? data.jamDates[0]?.iso ?? "");
+	let selectedJam = $derived(
+		data.jamDates.find((jamDate) => jamDate.iso === selectedJamDate) ?? data.jamDates[0]
+	);
+	let selectedJamSignups = $derived(signups.filter((signup) => signup.jamDate === selectedJamDate));
+	let helpOutFormUrl = $derived(
+		selectedJam
+			? withGoogleFormJamDate(
+					siteDetails.helpOutFormUrl,
+					siteDetails.helpOutJamDateEntryId,
+					selectedJam.date
+				)
+			: siteDetails.helpOutFormUrl
+	);
+	let helpOutFormEmbedUrl = $derived(
+		selectedJam
+			? withGoogleFormJamDate(
+					siteDetails.helpOutFormEmbedUrl,
+					siteDetails.helpOutJamDateEntryId,
+					selectedJam.date
+				)
+			: siteDetails.helpOutFormEmbedUrl
+	);
+	let classFormUrl = $derived(
+		selectedJam
+			? withGoogleFormJamDate(
+					siteDetails.classProposalFormUrl,
+					siteDetails.classProposalJamDateEntryId,
+					selectedJam.date
+				)
+			: siteDetails.classProposalFormUrl
+	);
+	let classFormEmbedUrl = $derived(
+		selectedJam
+			? withGoogleFormJamDate(
+					siteDetails.classProposalFormEmbedUrl,
+					siteDetails.classProposalJamDateEntryId,
+					selectedJam.date
+				)
+			: siteDetails.classProposalFormEmbedUrl
+	);
 
 	const signupRefreshAttempts = 20;
 	const signupRefreshInterval = 750;
@@ -42,7 +85,7 @@
 
 	async function refreshSignupsAfterSubmit() {
 		const activeRun = ++refreshRun;
-		const signupsBeforeSubmit = signups;
+		const signupsBeforeSubmit = selectedJamSignups;
 
 		for (let attempt = 0; attempt < signupRefreshAttempts; attempt += 1) {
 			try {
@@ -58,7 +101,10 @@
 				}
 
 				const refreshed = (await response.json()) as { signups: HelpOutSignup[] };
-				const newSignupIds = findNewSignupIds(signupsBeforeSubmit, refreshed.signups);
+				const refreshedJamSignups = refreshed.signups.filter(
+					(signup) => signup.jamDate === selectedJamDate
+				);
+				const newSignupIds = findNewSignupIds(signupsBeforeSubmit, refreshedJamSignups);
 
 				signups = refreshed.signups;
 				signupsAvailable = true;
@@ -89,6 +135,13 @@
 
 		selectedChoice = choice;
 	}
+
+	function selectJamDate(date: string) {
+		refreshRun += 1;
+		selectedJamDateOverride = date;
+		celebratedSignupIds = new Set();
+		signupAnnouncement = "";
+	}
 </script>
 
 <PageMeta title="Volunteer" description="Volunteer at Taco Tuesday Flow Jam." path="/help-out" />
@@ -115,6 +168,27 @@
 	</header>
 
 	<section aria-label="Volunteer" class="page-section volunteer-section">
+		<div class="jam-date-picker">
+			<div class="jam-date-copy">
+				<span>Choose a jam</span>
+				<label for="jam-date">Which Tuesday are you signing up for?</label>
+			</div>
+			<div class="select-shell">
+				<select
+					id="jam-date"
+					value={selectedJamDate}
+					onchange={(event) => selectJamDate(event.currentTarget.value)}
+				>
+					{#each data.jamDates as jamDate}
+						<option value={jamDate.iso}>{jamDate.label}</option>
+					{/each}
+				</select>
+				<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+					<path d="m6 9 6 6 6-6" />
+				</svg>
+			</div>
+		</div>
+
 		<div class:has-selection={selectedChoice !== null} class="volunteer-options">
 			<button
 				type="button"
@@ -126,7 +200,7 @@
 			>
 				<span class="choice-copy">
 					<strong>Help with the jam</strong>
-					<span>Set up, clean up, or say what you’re bringing.</span>
+					<span>Set up, clean up, or bring something for {selectedJam?.shortLabel}.</span>
 				</span>
 				<span class="choice-chevron" aria-hidden="true">
 					<svg viewBox="0 0 24 24" width="24" height="24">
@@ -145,7 +219,7 @@
 			>
 				<span class="choice-copy">
 					<strong>Classes</strong>
-					<span>Teach a donation-based class or request one.</span>
+					<span>Teach a donation-based class or request one for {selectedJam?.shortLabel}.</span>
 				</span>
 				<span class="choice-chevron" aria-hidden="true">
 					<svg viewBox="0 0 24 24" width="24" height="24">
@@ -167,9 +241,9 @@
 					<div class="choice-content">
 						<div class="pitch-grid">
 							<EmbeddedGoogleForm
-								src={siteDetails.helpOutFormEmbedUrl}
+								src={helpOutFormEmbedUrl}
 								title="Taco Tuesday volunteer signup"
-								fallbackHref={siteDetails.helpOutFormUrl}
+								fallbackHref={helpOutFormUrl}
 								onSubmitted={refreshSignupsAfterSubmit}
 							/>
 
@@ -181,6 +255,7 @@
 								>
 									<div class="signup-list-heading">
 										<h2 id="signup-list-title">Who’s helping</h2>
+										<p>{selectedJam?.label}</p>
 									</div>
 
 									<div class:show={signupAnnouncement} class="celebration-shell" aria-live="polite">
@@ -197,11 +272,11 @@
 										<p class="empty-state">
 											The signup list could not be loaded. The form still works.
 										</p>
-									{:else if signups.length === 0}
-										<p class="empty-state">No signups yet.</p>
+									{:else if selectedJamSignups.length === 0}
+										<p class="empty-state">No one has signed up for this Tuesday yet.</p>
 									{:else}
 										<ul class="signups">
-											{#each signups as signup (signup.id)}
+											{#each selectedJamSignups as signup (signup.id)}
 												<li
 													animate:flip={{
 														duration: prefersReducedMotion ? 0 : listMotionDuration,
@@ -258,9 +333,9 @@
 					<div class="choice-content class-content">
 						<div class="class-form">
 							<EmbeddedGoogleForm
-								src={siteDetails.classProposalFormEmbedUrl}
+								src={classFormEmbedUrl}
 								title="Taco Tuesday class form"
-								fallbackHref={siteDetails.classProposalFormUrl}
+								fallbackHref={classFormUrl}
 								size="classes"
 							/>
 						</div>
@@ -274,6 +349,7 @@
 <style>
 	.page {
 		display: grid;
+		align-content: start;
 		gap: var(--help-page-section-gap);
 		width: min(var(--shell-width), var(--help-page-width));
 		min-height: calc(100svh - var(--header-offset) - 5.75rem);
@@ -359,6 +435,73 @@
 		gap: var(--space-5);
 		width: 100%;
 		margin-inline: auto;
+	}
+
+	.jam-date-picker {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
+		align-items: center;
+		gap: var(--space-5);
+		padding: var(--space-5);
+		border: var(--border-thin) solid color-mix(in srgb, var(--theme-led) 38%, var(--theme-stroke));
+		border-radius: var(--radius-large);
+		background: color-mix(in srgb, var(--theme-led) 7%, var(--theme-panel-bg));
+		box-shadow: var(--shadow-panel);
+	}
+
+	.jam-date-copy {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.jam-date-copy span {
+		color: var(--theme-led);
+		font-size: var(--text-small);
+		font-weight: 850;
+		letter-spacing: var(--tracking-wide);
+		text-transform: uppercase;
+	}
+
+	.jam-date-copy label {
+		font-size: var(--text-card-title);
+		font-weight: 850;
+		line-height: 1.15;
+	}
+
+	.select-shell {
+		position: relative;
+	}
+
+	.select-shell select {
+		width: 100%;
+		min-height: var(--min-touch-target);
+		appearance: none;
+		padding: var(--space-3) calc(var(--space-6) + 1.25rem) var(--space-3) var(--space-4);
+		border: var(--border-thin) solid var(--theme-stroke-strong);
+		border-radius: var(--radius-medium);
+		background: var(--theme-card-bg);
+		color: var(--theme-text);
+		font: inherit;
+		font-weight: 750;
+		cursor: pointer;
+	}
+
+	.select-shell select:focus-visible {
+		outline: none;
+		box-shadow: var(--focus-ring);
+	}
+
+	.select-shell svg {
+		position: absolute;
+		top: 50%;
+		right: var(--space-4);
+		fill: none;
+		stroke: var(--theme-led);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 2;
+		pointer-events: none;
+		transform: translateY(-50%);
 	}
 
 	.volunteer-options {
@@ -584,6 +727,12 @@
 		font-weight: 860;
 	}
 
+	.signup-list-heading p {
+		margin: var(--space-2) 0 0;
+		color: var(--theme-led);
+		font-weight: 750;
+	}
+
 	.empty-state {
 		margin: 0;
 		padding: var(--space-6) var(--space-5);
@@ -802,6 +951,10 @@
 	}
 
 	@media (max-width: 64rem) {
+		.jam-date-picker {
+			grid-template-columns: 1fr;
+		}
+
 		.pitch-grid {
 			grid-template-columns: 1fr;
 		}

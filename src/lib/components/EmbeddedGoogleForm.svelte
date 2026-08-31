@@ -10,6 +10,11 @@
 	let { src, title, fallbackHref, size = "help", onSubmitted }: Props = $props();
 	let hasLoaded = false;
 
+	$effect(() => {
+		src;
+		hasLoaded = false;
+	});
+
 	function handleLoad() {
 		if (!hasLoaded) {
 			hasLoaded = true;

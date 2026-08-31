@@ -14,9 +14,19 @@ export const siteDetails = {
 	albumUrl: "https://photos.app.goo.gl/uNgZT4Zz6EBixmby7",
 	paypalUrl: "https://paypal.me/flowtaco",
 	helpOutSheetUrl:
-		"https://docs.google.com/spreadsheets/d/1UB0xIJP3fJa5yPrYWD5L3cz-V2lbXWRn1LaK8a0iFJ0/edit?gid=1056080699#gid=1056080699",
+		"https://docs.google.com/spreadsheets/d/1UB0xIJP3fJa5yPrYWD5L3cz-V2lbXWRn1LaK8a0iFJ0/edit?gid=1913923790#gid=1913923790",
+	helpOutFormUrl:
+		"https://docs.google.com/forms/d/e/1FAIpQLScmf2V0FC39x9U9NykemOgjE6HJRM9bWOP3pefR8iL8OpGr6w/viewform?usp=publish-editor",
+	helpOutFormEmbedUrl:
+		"https://docs.google.com/forms/d/e/1FAIpQLScmf2V0FC39x9U9NykemOgjE6HJRM9bWOP3pefR8iL8OpGr6w/viewform?embedded=true",
+	helpOutJamDateEntryId: "1245838896",
+	helpOutResponsesCsvUrl:
+		"https://docs.google.com/spreadsheets/d/1UB0xIJP3fJa5yPrYWD5L3cz-V2lbXWRn1LaK8a0iFJ0/export?format=csv&gid=1913923790",
 	classProposalFormUrl:
 		"https://docs.google.com/forms/d/e/1FAIpQLSdC_GjcKANfniCpJontQrVGngAJp7Va6Y7YNyxD4e8UkAPnCA/viewform?usp=publish-editor",
+	classProposalFormEmbedUrl:
+		"https://docs.google.com/forms/d/e/1FAIpQLSdC_GjcKANfniCpJontQrVGngAJp7Va6Y7YNyxD4e8UkAPnCA/viewform?embedded=true",
+	classProposalJamDateEntryId: "1204494921",
 	canonicalUrl: "https://ttflowjam.com",
 } as const;
 
