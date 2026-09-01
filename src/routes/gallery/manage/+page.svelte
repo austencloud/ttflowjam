@@ -160,7 +160,7 @@
 			<p class="kicker">Gallery</p>
 			<h1>Manage photos</h1>
 			<p class="lede">
-				Open anything for a closer look. Remove it from the public gallery when needed.
+				Open anything for a closer look. Hide it from the public gallery when needed.
 			</p>
 		</div>
 		<div class="account-actions">
@@ -236,20 +236,22 @@
 						class:restore={Boolean(item.moderation)}
 						class="moderate-control"
 						disabled={pendingIds.has(item.id)}
-						aria-label={item.moderation ? "Restore to public gallery" : "Hide from public gallery"}
-						title={item.moderation ? "Restore to gallery" : "Hide from gallery"}
+						aria-label={item.moderation ? "Show in public gallery" : "Hide from public gallery"}
+						title={item.moderation ? "Show in gallery" : "Hide from gallery"}
 						onclick={() => moderate(item, item.moderation ? "restore" : "hide")}
 					>
 						{#if item.moderation}
-							<svg viewBox="0 0 24 24" aria-hidden="true"
-								><path d="M4 7v5h5" /><path d="M5.5 11a7 7 0 1 1 1.9 6.8" /></svg
-							>
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+								<circle cx="12" cy="12" r="2.75" />
+							</svg>
 						{:else}
-							<svg viewBox="0 0 24 24" aria-hidden="true"
-								><path d="M4 7h16" /><path d="m9 7 .7-2h4.6l.7 2" /><path
-									d="m7 7 .8 13h8.4L17 7"
-								/><path d="M10 11v5M14 11v5" /></svg
-							>
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path d="m3 3 18 18" />
+								<path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+								<path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c6 0 9.5 7 9.5 7a17.7 17.7 0 0 1-2.2 3.1" />
+								<path d="M6.6 6.6A18.4 18.4 0 0 0 2.5 12S6 19 12 19a10.8 10.8 0 0 0 4.1-.8" />
+							</svg>
 						{/if}
 					</button>
 				</li>
