@@ -4,7 +4,7 @@
 	const links = [
 		{ href: "/", label: "Info" },
 		{ href: "/gallery", label: "Gallery" },
-		{ href: "/help-out", label: "Help out" },
+		{ href: "/help-out", label: "Volunteer" },
 	];
 
 	const isActive = (href: string) =>
@@ -95,12 +95,20 @@
 		transition: background var(--duration-fast) var(--ease-out);
 	}
 
-	nav a:hover,
+	nav a:hover {
+		color: var(--theme-selection-strong);
+	}
+
 	nav a[aria-current="page"] {
 		color: var(--theme-text);
 	}
 
 	nav a[aria-current="page"]::after {
-		background: var(--theme-accent);
+		background: linear-gradient(
+			90deg,
+			var(--theme-selection),
+			var(--theme-led),
+			var(--theme-spark)
+		);
 	}
 </style>

@@ -69,7 +69,7 @@
 	}
 
 	.outline:hover {
-		border-color: var(--theme-accent);
+		border-color: var(--theme-selection);
 		background: var(--theme-card-hover-bg);
 	}
 

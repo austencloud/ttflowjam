@@ -313,7 +313,7 @@
 		border: 0;
 		border-radius: var(--radius-small);
 		background: transparent;
-		color: var(--color-text);
+		color: var(--theme-accent);
 		font-size: var(--text-small);
 		font-weight: 780;
 		letter-spacing: var(--tracking-label);
@@ -326,7 +326,8 @@
 	}
 
 	.controls button:hover {
-		background: var(--theme-card-hover-bg);
+		background: color-mix(in srgb, var(--theme-selection) 10%, var(--theme-card-hover-bg));
+		color: var(--theme-selection-strong);
 	}
 
 	.controls p {

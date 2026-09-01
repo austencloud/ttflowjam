@@ -1,18 +1,45 @@
 @layer thirdparty, base, overrides;
 
 :root {
-	--theme-page-bg: #0b0b10;
-	--theme-panel-bg: #14141c;
-	--theme-card-bg: #1a1a24;
-	--theme-card-hover-bg: #22222e;
-	--theme-accent: #9b8cff;
-	--theme-accent-strong: #7b6be2;
-	--theme-text: #f5f5f7;
-	--theme-text-soft: #c9c9d1;
-	--theme-text-muted: #9d9daa;
-	--theme-stroke: rgb(255 255 255 / 0.11);
-	--theme-stroke-strong: rgb(255 255 255 / 0.22);
+	--brand-tortilla: #fcb42f;
+	--brand-tortilla-strong: #f0951c;
+	--brand-salsa: #f07a5e;
+	--brand-salsa-strong: #ff967a;
+	--brand-lettuce: #9dbb4b;
+	--brand-night: #0b0b10;
+	--brand-night-panel: #13121b;
+	--brand-night-card: #1a1825;
+	--brand-night-hover: #242137;
+	--brand-led-violet: #9b8cff;
+	--brand-led-cyan: #63d7ff;
+	--brand-led-cyan-strong: #96e7ff;
+	--brand-led-magenta: #ff4fa3;
+	--brand-cream: #fadfa9;
+	--brand-ink: #100d0f;
+
+	--theme-page-bg: var(--brand-night);
+	--theme-panel-bg: var(--brand-night-panel);
+	--theme-card-bg: var(--brand-night-card);
+	--theme-card-hover-bg: var(--brand-night-hover);
+	--theme-accent: var(--brand-tortilla);
+	--theme-accent-strong: var(--brand-tortilla-strong);
+	--theme-food: var(--brand-salsa);
+	--theme-food-strong: var(--brand-salsa-strong);
+	--theme-selection: var(--brand-led-cyan);
+	--theme-selection-strong: var(--brand-led-cyan-strong);
+	--theme-led: var(--brand-led-violet);
+	--theme-decorative: var(--brand-lettuce);
+	--theme-spark: var(--brand-led-magenta);
+	--theme-on-accent: var(--brand-ink);
+	--theme-text: #fff7ed;
+	--theme-text-soft: #d9c8bd;
+	--theme-text-muted: #b69b8f;
+	--theme-stroke: rgb(155 140 255 / 0.17);
+	--theme-stroke-strong: rgb(155 140 255 / 0.38);
 	--semantic-success: #6ee7a7;
+	--semantic-error: #ff6b6b;
+	--semantic-warning: var(--brand-tortilla);
+	--semantic-info: var(--brand-led-cyan);
 
 	--color-night: var(--theme-page-bg);
 	--color-night-raised: var(--theme-panel-bg);
@@ -20,19 +47,23 @@
 	--color-night-soft: var(--theme-card-hover-bg);
 	--color-paper: var(--theme-accent);
 	--color-paper-deep: var(--theme-accent-strong);
-	--color-paper-ink: #0b0b10;
+	--color-paper-ink: var(--theme-on-accent);
 	--color-text: var(--theme-text);
 	--color-text-soft: var(--theme-text-soft);
 	--color-text-muted: var(--theme-text-muted);
-	--color-gold: var(--theme-accent);
-	--color-red: var(--theme-accent);
-	--color-red-deep: var(--theme-accent-strong);
+	--color-gold: var(--brand-tortilla);
+	--color-red: var(--theme-food);
+	--color-red-deep: var(--theme-food-strong);
 	--color-green: var(--semantic-success);
 	--color-line: var(--theme-stroke);
 	--color-line-soft: var(--theme-stroke);
-	--color-shadow: rgb(0 0 0 / 0.42);
-	--color-photo-scrim: rgb(11 11 16 / 0.78);
-	--texture-page: none;
+	--color-shadow: rgb(0 0 0 / 0.48);
+	--color-photo-scrim: rgb(11 11 16 / 0.7);
+	--texture-page:
+		radial-gradient(circle at 7% 8%, rgb(155 140 255 / 0.13), transparent 36rem),
+		radial-gradient(circle at 94% 28%, rgb(99 215 255 / 0.09), transparent 31rem),
+		radial-gradient(circle at 73% 82%, rgb(255 79 163 / 0.075), transparent 27rem),
+		radial-gradient(circle at 34% 58%, rgb(252 180 47 / 0.04), transparent 38rem);
 	--texture-paper: none;
 
 	--font-body: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -75,6 +106,12 @@
 	--map-dialog-width: 72rem;
 	--map-frame-height: min(60svh, 44rem);
 	--map-frame-min-height: 20rem;
+	--help-page-width: clamp(82rem, 46vw, 112rem);
+	--help-page-section-gap: clamp(3rem, 5vw, 5rem);
+	--help-form-height: clamp(46rem, 82svh, 58rem);
+	--class-form-height: 44rem;
+	--signup-list-min: 20rem;
+	--signup-list-height: 38rem;
 
 	--border-thin: 0.0625rem;
 	--border-medium: 0.125rem;
@@ -83,13 +120,14 @@
 	--radius-medium: 0.85rem;
 	--radius-large: 1.15rem;
 	--radius-round: 999rem;
-	--shadow-panel: 0 0.75rem 2rem rgb(0 0 0 / 0.28);
-	--shadow-photo: 0 1rem 3rem rgb(0 0 0 / 0.34);
+	--shadow-panel:
+		0 0.75rem 2rem rgb(0 0 0 / 0.32), 0 0 0 var(--border-thin) rgb(155 140 255 / 0.055);
+	--shadow-photo: 0 1rem 3rem rgb(0 0 0 / 0.38);
 
 	--duration-fast: 150ms;
 	--duration-normal: 240ms;
 	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-	--focus-ring: 0 0 0 0.18rem var(--color-night), 0 0 0 0.38rem var(--theme-accent);
+	--focus-ring: 0 0 0 0.18rem var(--color-night), 0 0 0 0.38rem var(--theme-selection-strong);
 	--z-header: 50;
 }
 

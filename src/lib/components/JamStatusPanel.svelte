@@ -42,9 +42,16 @@
 	section {
 		min-height: var(--status-reserve);
 		padding: clamp(var(--space-4), 3vw, var(--space-5));
-		border: var(--border-thin) solid var(--theme-stroke);
+		border: var(--border-thin) solid
+			color-mix(in srgb, var(--theme-accent) 28%, var(--theme-stroke));
 		border-radius: var(--radius-large);
-		background: var(--theme-panel-bg);
+		background:
+			radial-gradient(
+				circle at 100% 0%,
+				color-mix(in srgb, var(--theme-accent) 11%, transparent),
+				transparent 42%
+			),
+			var(--theme-panel-bg);
 		box-shadow: var(--shadow-panel);
 		color: var(--theme-text);
 	}
@@ -75,6 +82,7 @@
 
 	h2 {
 		margin-bottom: var(--space-2);
+		color: var(--brand-cream);
 		font-size: var(--text-status);
 		font-weight: 900;
 	}

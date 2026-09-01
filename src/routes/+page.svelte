@@ -92,7 +92,7 @@
 	}
 
 	h1 .flow-jam {
-		color: var(--theme-accent);
+		color: var(--theme-food-strong);
 		font-size: 0.58em;
 		letter-spacing: 0.16em;
 		line-height: 1.2;
@@ -150,7 +150,8 @@
 
 	li {
 		padding-block: var(--space-3);
-		border-top: var(--border-thin) solid var(--theme-stroke-strong);
+		border-top: var(--border-thin) solid
+			color-mix(in srgb, var(--theme-accent) 46%, var(--theme-stroke));
 	}
 
 	time {
