@@ -5,7 +5,9 @@
 	import ActionLink from "$lib/components/ActionLink.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
 	import { siteDetails } from "$lib/data/site-details";
-	import manifest from "$lib/data/gallery-manifest.json";
+	import type { PageData } from "./$types";
+
+	let { data }: { data: PageData } = $props();
 
 	const featuredIds = [
 		"38faa9921878369d",
@@ -20,14 +22,16 @@
 		"5df89b95173bdd9e",
 	];
 	const featured = new Map(featuredIds.map((id, index) => [id, index]));
-	const orderedMedia = [...manifest].sort((a, b) => {
-		const aRank = featured.get(a.id) ?? Number.POSITIVE_INFINITY;
-		const bRank = featured.get(b.id) ?? Number.POSITIVE_INFINITY;
-		return aRank - bRank;
-	});
-	const years = [...new Set(manifest.map((media) => media.year))].sort((a, b) => b - a);
-	const yearCounts = new Map(
-		years.map((year) => [year, manifest.filter((media) => media.year === year).length])
+	const orderedMedia = $derived(
+		[...data.media].sort((a, b) => {
+			const aRank = featured.get(a.id) ?? Number.POSITIVE_INFINITY;
+			const bRank = featured.get(b.id) ?? Number.POSITIVE_INFINITY;
+			return aRank - bRank;
+		})
+	);
+	const years = $derived([...new Set(data.media.map((media) => media.year))].sort((a, b) => b - a));
+	const yearCounts = $derived(
+		new Map(years.map((year) => [year, data.media.filter((media) => media.year === year).length]))
 	);
 	const BATCH_SIZE = 60;
 
@@ -120,7 +124,10 @@
 	<header>
 		<p class="kicker">Community album</p>
 		<h1>Gallery</h1>
-		<ActionLink href={siteDetails.albumUrl} external>Add photos to the shared album</ActionLink>
+		<div class="header-actions">
+			<ActionLink href={siteDetails.albumUrl} external>Add photos</ActionLink>
+			<ActionLink href="/gallery/manage" tone="outline">Organizers</ActionLink>
+		</div>
 	</header>
 
 	<div class="gallery-tools">
@@ -128,7 +135,7 @@
 			<span>Year</span>
 			<span class="select-shell">
 				<select value={selectedYear} onchange={handleYearChange}>
-					<option value="all">All years ({manifest.length})</option>
+					<option value="all">All years ({data.media.length})</option>
 					{#each years as year}
 						<option value={year}>{year} ({yearCounts.get(year)})</option>
 					{/each}
@@ -228,6 +235,13 @@
 		margin-bottom: var(--space-5);
 		font-size: var(--text-page);
 		font-weight: 900;
+	}
+
+	.header-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-3);
 	}
 
 	.gallery-tools {

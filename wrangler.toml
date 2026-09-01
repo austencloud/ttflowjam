@@ -6,3 +6,8 @@ compatibility_flags = ["nodejs_compat"]
 [[r2_buckets]]
 binding = "TTFJ_MEDIA"
 bucket_name = "ttfj-media"
+
+[[d1_databases]]
+binding = "TTFJ_MODERATION"
+database_name = "ttflowjam-moderation"
+database_id = "3d609ca1-2319-45da-a90e-1f1d3f6d486c"

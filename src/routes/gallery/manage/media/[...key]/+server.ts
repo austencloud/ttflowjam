@@ -1,13 +1,14 @@
 import { error } from "@sveltejs/kit";
-import { isGalleryMediaHidden } from "$lib/server/gallery-moderation";
+import { requireGalleryModerator } from "$lib/server/gallery-auth";
 import { parseGalleryMediaKey, serveGalleryMedia } from "$lib/server/gallery-media";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async ({ params, platform, request }) => {
+	await requireGalleryModerator(request, platform);
 	const media = parseGalleryMediaKey(params.key);
-	if (!media || (await isGalleryMediaHidden(platform, media.mediaId))) {
+	if (!media) {
 		error(404, "Not found");
 	}
 
-	return serveGalleryMedia(media, request, platform, "private, max-age=0, must-revalidate");
+	return serveGalleryMedia(media, request, platform, "private, no-store");
 };
