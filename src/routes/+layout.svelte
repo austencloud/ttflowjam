@@ -5,12 +5,14 @@
 	import Footer from "$lib/components/Footer.svelte";
 	import Header from "$lib/components/Header.svelte";
 	import RouteTransition from "$lib/components/RouteTransition.svelte";
+	import type { LayoutData } from "./$types";
 
 	interface Props {
 		children: Snippet;
+		data: LayoutData;
 	}
 
-	let { children }: Props = $props();
+	let { children, data }: Props = $props();
 </script>
 
 <svelte:head>
@@ -42,7 +44,7 @@
 </svelte:head>
 
 <RouteTransition />
-<Header />
+<Header moderator={data.moderator} />
 <main id="content">
 	{@render children()}
 </main>

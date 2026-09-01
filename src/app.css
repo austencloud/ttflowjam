@@ -98,6 +98,14 @@
 	--card-min: min(19rem, 100%);
 	--feature-min: min(26rem, 100%);
 	--gallery-column: 10rem;
+	--account-avatar-size: 2rem;
+	--presence-size: 0.65rem;
+	--account-name-width: 8rem;
+	--account-menu-width: 20rem;
+	--account-menu-blur: 1rem;
+	--google-button-width: 20rem;
+	--icon-size-small: 1rem;
+	--icon-size-medium: 1.25rem;
 	--hero-photo-min: 18rem;
 	--closing-min: 18rem;
 	--min-touch-target: 2.75rem;

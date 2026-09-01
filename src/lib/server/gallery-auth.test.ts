@@ -1,6 +1,7 @@
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT, type JWK } from "jose";
+import type { Cookies } from "@sveltejs/kit";
 import { describe, expect, it } from "vitest";
-import { verifyGoogleIdentityToken } from "./gallery-auth";
+import { destroyGallerySession, verifyGoogleIdentityToken } from "./gallery-auth";
 
 async function identityToken(overrides: Record<string, unknown> = {}) {
 	const { privateKey, publicKey } = await generateKeyPair("RS256");
@@ -43,5 +44,21 @@ describe("verifyGoogleIdentityToken", () => {
 	it("rejects a token for another OAuth client", async () => {
 		const { keySet, token } = await identityToken();
 		await expect(verifyGoogleIdentityToken(token, "another-client", keySet)).rejects.toThrow();
+	});
+});
+
+describe("destroyGallerySession", () => {
+	it("clears both the site-wide session and the old gallery-only cookie", async () => {
+		const deleted: Array<{ name: string; path?: string }> = [];
+		const cookies = {
+			delete: (name: string, options: { path?: string }) => deleted.push({ name, ...options }),
+		} as unknown as Cookies;
+
+		await destroyGallerySession(new Request("https://ttflowjam.com/"), undefined, cookies);
+
+		expect(deleted).toEqual([
+			{ name: "ttfj_gallery_session", path: "/" },
+			{ name: "ttfj_gallery_session", path: "/gallery/manage" },
+		]);
 	});
 });

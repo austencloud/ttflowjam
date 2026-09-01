@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { onMount, untrack } from "svelte";
+	import { untrack } from "svelte";
 	import ActionLink from "$lib/components/ActionLink.svelte";
+	import GoogleOneTap from "$lib/components/GoogleOneTap.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
 	import type { PageData } from "./$types";
 
@@ -8,38 +9,25 @@
 	let errorMessage = $state(untrack(() => data.errorMessage));
 	let signingIn = $state(false);
 
-	interface GoogleCredentialResponse {
-		credential: string;
-	}
-
-	onMount(() => {
-		const browserWindow = window as typeof window & {
-			handleTacoGoogleCredential?: (response: GoogleCredentialResponse) => void;
-		};
-		browserWindow.handleTacoGoogleCredential = async ({ credential }) => {
-			signingIn = true;
-			errorMessage = "";
-			try {
-				const response = await fetch("/gallery/manage/auth/google", {
-					method: "POST",
-					headers: { "content-type": "application/json" },
-					body: JSON.stringify({ credential }),
-				});
-				const result = (await response.json()) as { error?: string };
-				if (!response.ok) {
-					throw new Error(result.error || "Google sign-in did not finish. Please try again.");
-				}
-				window.location.assign("/gallery/manage");
-			} catch (cause) {
-				errorMessage = cause instanceof Error ? cause.message : "Google sign-in did not finish.";
-				signingIn = false;
+	async function handleCredential(credential: string) {
+		signingIn = true;
+		errorMessage = "";
+		try {
+			const response = await fetch("/gallery/manage/auth/google", {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ credential }),
+			});
+			const result = (await response.json()) as { error?: string };
+			if (!response.ok) {
+				throw new Error(result.error || "Google sign-in did not finish. Please try again.");
 			}
-		};
-
-		return () => {
-			delete browserWindow.handleTacoGoogleCredential;
-		};
-	});
+			window.location.assign("/gallery/manage");
+		} catch (cause) {
+			errorMessage = cause instanceof Error ? cause.message : "Google sign-in did not finish.";
+			signingIn = false;
+		}
+	}
 </script>
 
 <PageMeta
@@ -48,10 +36,7 @@
 	path="/gallery/manage/sign-in"
 />
 
-<svelte:head>
-	<meta name="robots" content="noindex, nofollow" />
-	<script src="https://accounts.google.com/gsi/client" async></script>
-</svelte:head>
+<svelte:head><meta name="robots" content="noindex, nofollow" /></svelte:head>
 
 <div class="page">
 	<section class="sign-in-card" aria-labelledby="sign-in-title">
@@ -65,25 +50,12 @@
 			<p class="status" role="status">Signing in…</p>
 		{/if}
 
-		<div
-			id="g_id_onload"
-			data-client_id={data.clientId}
-			data-callback="handleTacoGoogleCredential"
-			data-auto_prompt="true"
-			data-auto_select="true"
-			data-itp_support="true"
-			data-use_fedcm_for_prompt="true"
-		></div>
 		<div class="google-button">
-			<div
-				class="g_id_signin"
-				data-type="standard"
-				data-shape="pill"
-				data-theme="filled_black"
-				data-text="signin_with"
-				data-size="large"
-				data-logo_alignment="left"
-			></div>
+			<GoogleOneTap
+				clientId={data.clientId}
+				onCredential={handleCredential}
+				onUnavailable={(message) => (errorMessage = message)}
+			/>
 		</div>
 
 		<ActionLink href="/gallery" tone="outline">Back to gallery</ActionLink>

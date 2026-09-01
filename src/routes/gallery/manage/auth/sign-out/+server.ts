@@ -8,5 +8,5 @@ export const POST: RequestHandler = async ({ request, platform, cookies, url }) 
 		error(403, "Cross-site sign-out requests are not allowed.");
 	}
 	await destroyGallerySession(request, platform, cookies);
-	redirect(303, "/gallery/manage/sign-in");
+	redirect(303, "/");
 };

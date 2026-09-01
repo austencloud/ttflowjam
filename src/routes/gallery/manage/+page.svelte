@@ -144,15 +144,6 @@
 		notice = null;
 		await moderate(item, action);
 	}
-
-	function disableGoogleAutoSelect() {
-		const google = (
-			window as typeof window & {
-				google?: { accounts?: { id?: { disableAutoSelect?: () => void } } };
-			}
-		).google;
-		google?.accounts?.id?.disableAutoSelect?.();
-	}
 </script>
 
 <PageMeta
@@ -161,10 +152,7 @@
 	path="/gallery/manage"
 />
 
-<svelte:head>
-	<meta name="robots" content="noindex, nofollow" />
-	<script src="https://accounts.google.com/gsi/client" async></script>
-</svelte:head>
+<svelte:head><meta name="robots" content="noindex, nofollow" /></svelte:head>
 
 <div class="page">
 	<header class="page-header">
@@ -180,9 +168,6 @@
 				<ActionLink href="/gallery/manage/moderators" tone="outline">Moderators</ActionLink>
 			{/if}
 			<ActionLink href="/gallery" tone="outline">Public gallery</ActionLink>
-			<form method="POST" action="/gallery/manage/auth/sign-out" onsubmit={disableGoogleAutoSelect}>
-				<button type="submit">Sign out</button>
-			</form>
 		</div>
 	</header>
 
@@ -340,22 +325,6 @@
 		flex-wrap: wrap;
 		justify-content: end;
 		gap: var(--space-2);
-	}
-	.account-actions form,
-	.account-actions form button {
-		min-height: var(--min-touch-target);
-	}
-	.account-actions form button {
-		padding-inline: var(--space-3);
-		border: 0;
-		background: transparent;
-		color: var(--color-text-muted);
-		font-size: var(--font-size-min);
-		font-weight: 760;
-		cursor: pointer;
-	}
-	.account-actions form button:hover {
-		color: var(--theme-text);
 	}
 	.controls {
 		display: flex;

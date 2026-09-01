@@ -11,6 +11,8 @@ import {
 
 const sessionCookieName = "ttfj_gallery_session";
 const sessionLifetimeSeconds = 60 * 60 * 24 * 30;
+const siteWideCookiePath = "/";
+const legacyCookiePath = "/gallery/manage";
 const googleKeySet = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
 
 interface GoogleIdentityClaims extends JWTPayload {
@@ -207,9 +209,10 @@ export async function createGallerySession(
 		httpOnly: true,
 		secure: true,
 		sameSite: "lax",
-		path: "/gallery/manage",
+		path: siteWideCookiePath,
 		maxAge: sessionLifetimeSeconds,
 	});
+	cookies.delete(sessionCookieName, { path: legacyCookiePath });
 
 	return {
 		email: identity.email,
@@ -217,6 +220,24 @@ export async function createGallerySession(
 		name: identity.name,
 		picture: identity.picture,
 	};
+}
+
+export function ensureSiteWideGallerySession(request: Request, cookies: Cookies): void {
+	if (dev) {
+		return;
+	}
+	const token = parseCookie(request, sessionCookieName);
+	if (!token) {
+		return;
+	}
+	cookies.set(sessionCookieName, token, {
+		httpOnly: true,
+		secure: true,
+		sameSite: "lax",
+		path: siteWideCookiePath,
+		maxAge: sessionLifetimeSeconds,
+	});
+	cookies.delete(sessionCookieName, { path: legacyCookiePath });
 }
 
 export async function getGalleryModerator(
@@ -281,7 +302,8 @@ export async function destroyGallerySession(
 			.bind(await sha256(token))
 			.run();
 	}
-	cookies.delete(sessionCookieName, { path: "/gallery/manage" });
+	cookies.delete(sessionCookieName, { path: siteWideCookiePath });
+	cookies.delete(sessionCookieName, { path: legacyCookiePath });
 }
 
 export async function listGalleryModerators(

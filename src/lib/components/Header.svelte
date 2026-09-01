@@ -1,5 +1,19 @@
 <script lang="ts">
 	import { page } from "$app/state";
+	import ModeratorAccount from "$lib/components/ModeratorAccount.svelte";
+
+	interface Moderator {
+		email: string;
+		role: "owner" | "moderator";
+		name: string | null;
+		picture: string | null;
+	}
+
+	interface Props {
+		moderator: Moderator | null;
+	}
+
+	let { moderator }: Props = $props();
 
 	const links = [
 		{ href: "/", label: "Info" },
@@ -15,11 +29,13 @@
 
 <header>
 	<div class="bar">
+		<span class="balance" aria-hidden="true"></span>
 		<nav aria-label="Main navigation">
 			{#each links as link (link.href)}
 				<a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>{link.label}</a>
 			{/each}
 		</nav>
+		<ModeratorAccount {moderator} />
 	</div>
 </header>
 
@@ -52,11 +68,15 @@
 
 	.bar {
 		width: var(--shell-width);
-		display: flex;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 		align-items: center;
-		justify-content: center;
 		min-height: var(--min-touch-target);
 		margin-inline: auto;
+	}
+
+	.balance {
+		min-width: 0;
 	}
 
 	nav a {
@@ -71,6 +91,24 @@
 	nav {
 		display: flex;
 		gap: var(--space-4);
+		justify-self: center;
+	}
+
+	@media (max-width: 44rem) {
+		.bar {
+			grid-template-columns: auto minmax(0, 1fr);
+			gap: var(--space-2);
+		}
+		.balance {
+			display: none;
+		}
+		nav {
+			gap: var(--space-1);
+			justify-self: start;
+		}
+		nav a {
+			padding-inline: var(--space-2);
+		}
 	}
 
 	nav a {
