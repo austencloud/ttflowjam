@@ -28,14 +28,16 @@
 <a class="skip" href="#content">Skip to the page</a>
 
 <header>
-	<div class="bar">
+	<div class:has-account={moderator !== null} class="bar">
 		<span class="balance" aria-hidden="true"></span>
 		<nav aria-label="Main navigation">
 			{#each links as link (link.href)}
 				<a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>{link.label}</a>
 			{/each}
 		</nav>
-		<ModeratorAccount {moderator} />
+		{#if moderator}
+			<ModeratorAccount {moderator} />
+		{/if}
 	</div>
 </header>
 
@@ -99,12 +101,18 @@
 			grid-template-columns: auto minmax(0, 1fr);
 			gap: var(--space-2);
 		}
+		.bar:not(.has-account) {
+			grid-template-columns: 1fr;
+		}
 		.balance {
 			display: none;
 		}
 		nav {
 			gap: var(--space-1);
 			justify-self: start;
+		}
+		.bar:not(.has-account) nav {
+			justify-self: center;
 		}
 		nav a {
 			padding-inline: var(--space-2);

@@ -10,7 +10,7 @@
 	}
 
 	interface Props {
-		moderator: Moderator | null;
+		moderator: Moderator;
 	}
 
 	let { moderator }: Props = $props();
@@ -18,12 +18,12 @@
 	let menuOpen = $state(false);
 	let imageFailed = $state(false);
 	let signingOut = $state(false);
-	const displayName = $derived(moderator?.name?.trim() || moderator?.email || "Organizer");
+	const displayName = $derived(moderator.name?.trim() || moderator.email || "Organizer");
 	const shortName = $derived(displayName.split(/\s+/)[0] || "Organizer");
 	const initial = $derived(displayName.charAt(0).toUpperCase());
 
 	onMount(() => {
-		if (moderator) void loadGoogleIdentity().catch(() => undefined);
+		void loadGoogleIdentity().catch(() => undefined);
 
 		const closeOutside = (event: PointerEvent) => {
 			if (menuOpen && !accountRoot.contains(event.target as Node)) menuOpen = false;
@@ -49,55 +49,44 @@
 </script>
 
 <div class="account" bind:this={accountRoot}>
-	{#if moderator}
-		<button
-			type="button"
-			class="account-button"
-			aria-label={`Signed in as ${displayName}. Open organizer menu.`}
-			aria-expanded={menuOpen}
-			aria-haspopup="menu"
-			onclick={() => (menuOpen = !menuOpen)}
-		>
-			<span class="avatar" aria-hidden="true">
-				{#if moderator.picture && !imageFailed}
-					<img src={moderator.picture} alt="" onerror={() => (imageFailed = true)} />
-				{:else}
-					<span>{initial}</span>
-				{/if}
-				<span class="presence"></span>
-			</span>
-			<span class="account-name">{shortName}</span>
-			<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
-				<path d="m4 6 4 4 4-4" />
-			</svg>
-		</button>
-
-		<div class:open={menuOpen} class="account-menu" role="menu" aria-label="Organizer account">
-			<div class="identity">
-				<strong>{displayName}</strong>
-				<span>{moderator.email}</span>
-				<small>{moderator.role === "owner" ? "Site owner" : "Gallery moderator"}</small>
-			</div>
-			<a href="/gallery/manage" role="menuitem">Manage gallery</a>
-			{#if moderator.role === "owner"}
-				<a href="/gallery/manage/moderators" role="menuitem">Moderators</a>
+	<button
+		type="button"
+		class="account-button"
+		aria-label={`Signed in as ${displayName}. Open organizer menu.`}
+		aria-expanded={menuOpen}
+		aria-haspopup="menu"
+		onclick={() => (menuOpen = !menuOpen)}
+	>
+		<span class="avatar" aria-hidden="true">
+			{#if moderator.picture && !imageFailed}
+				<img src={moderator.picture} alt="" onerror={() => (imageFailed = true)} />
+			{:else}
+				<span>{initial}</span>
 			{/if}
-			<form method="POST" action="/gallery/manage/auth/sign-out" onsubmit={signOut}>
-				<button type="submit" role="menuitem" disabled={signingOut}>
-					{signingOut ? "Signing out…" : "Sign out"}
-				</button>
-			</form>
+			<span class="presence"></span>
+		</span>
+		<span class="account-name">{shortName}</span>
+		<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
+			<path d="m4 6 4 4 4-4" />
+		</svg>
+	</button>
+
+	<div class:open={menuOpen} class="account-menu" role="menu" aria-label="Organizer account">
+		<div class="identity">
+			<strong>{displayName}</strong>
+			<span>{moderator.email}</span>
+			<small>{moderator.role === "owner" ? "Site owner" : "Gallery moderator"}</small>
 		</div>
-	{:else}
-		<a class="sign-in" href="/gallery/manage/sign-in" aria-label="Organizer sign in">
-			<svg viewBox="0 0 24 24" aria-hidden="true">
-				<circle cx="12" cy="8" r="3.25" />
-				<path d="M5.5 19c.7-3.4 2.9-5.1 6.5-5.1s5.8 1.7 6.5 5.1" />
-			</svg>
-			<span class="wide-label">Organizer sign in</span>
-			<span class="short-label">Sign in</span>
-		</a>
-	{/if}
+		<a href="/gallery/manage" role="menuitem">Manage gallery</a>
+		{#if moderator.role === "owner"}
+			<a href="/gallery/manage/moderators" role="menuitem">Moderators</a>
+		{/if}
+		<form method="POST" action="/gallery/manage/auth/sign-out" onsubmit={signOut}>
+			<button type="submit" role="menuitem" disabled={signingOut}>
+				{signingOut ? "Signing out…" : "Sign out"}
+			</button>
+		</form>
+	</div>
 </div>
 
 <style>
@@ -106,8 +95,7 @@
 		justify-self: end;
 	}
 
-	.account-button,
-	.sign-in {
+	.account-button {
 		display: inline-flex;
 		height: var(--min-touch-target);
 		align-items: center;
@@ -129,8 +117,7 @@
 	}
 
 	.account-button:hover,
-	.account-button[aria-expanded="true"],
-	.sign-in:hover {
+	.account-button[aria-expanded="true"] {
 		border-color: var(--theme-stroke-strong);
 		background: var(--theme-card-bg);
 		color: var(--theme-selection-strong);
@@ -283,29 +270,6 @@
 
 	.account-menu form button {
 		color: var(--theme-food-strong);
-	}
-
-	.sign-in svg {
-		width: var(--icon-size-medium);
-		height: var(--icon-size-medium);
-		fill: none;
-		stroke: currentColor;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-		stroke-width: 1.8;
-	}
-
-	.short-label {
-		display: none;
-	}
-
-	@media (max-width: 54rem) {
-		.wide-label {
-			display: none;
-		}
-		.short-label {
-			display: inline;
-		}
 	}
 
 	@media (max-width: 34rem) {

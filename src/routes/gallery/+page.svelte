@@ -127,7 +127,6 @@
 		<h1>Gallery</h1>
 		<div class="header-actions">
 			<ActionLink href={siteDetails.albumUrl} external>Add photos</ActionLink>
-			<ActionLink href="/gallery/manage" tone="outline">Organizers</ActionLink>
 		</div>
 	</header>
 
