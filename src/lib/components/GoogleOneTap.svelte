@@ -77,7 +77,8 @@
 <style>
 	.google-button {
 		display: grid;
-		width: min(100%, var(--google-button-width));
+		width: var(--google-button-width);
+		max-width: 100%;
 		min-height: var(--min-touch-target);
 		place-items: center;
 	}
