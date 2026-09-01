@@ -4,7 +4,7 @@ import path from "node:path";
 import sharp from "sharp";
 
 const root = process.cwd();
-const mediaRoot = path.resolve(process.argv[2] ?? path.join(root, "harvest", "gallery-build-next"));
+const mediaRoot = path.resolve(process.argv[2] ?? path.join(root, "harvest", "gallery-build"));
 const manifest = JSON.parse(
 	await readFile(path.join(root, "src", "lib", "data", "gallery-manifest.json"), "utf8")
 );
@@ -64,23 +64,42 @@ assert(
 	`Wrong type counts: ${JSON.stringify(typeCounts)}`
 );
 
-const [thumbFiles, fullFiles, videoFiles] = await Promise.all([
+const [thumbFiles, previewFiles, fullFiles, videoFiles] = await Promise.all([
 	readdir(path.join(mediaRoot, "thumb")),
+	readdir(path.join(mediaRoot, "preview")),
 	readdir(path.join(mediaRoot, "full")),
 	readdir(path.join(mediaRoot, "video")),
 ]);
 assert(thumbFiles.length === 834, `Expected 834 thumbnails, found ${thumbFiles.length}`);
+assert(previewFiles.length === 834, `Expected 834 previews, found ${previewFiles.length}`);
 assert(fullFiles.length === 834, `Expected 834 full images/posters, found ${fullFiles.length}`);
 assert(videoFiles.length === 107, `Expected 107 videos, found ${videoFiles.length}`);
 
 for (const entry of manifest) {
 	const thumbPath = path.join(mediaRoot, "thumb", `${entry.id}.webp`);
+	const previewPath = path.join(mediaRoot, "preview", `${entry.id}.webp`);
 	const fullPath = path.join(mediaRoot, "full", `${entry.id}.webp`);
 	assert(await exists(thumbPath), `Missing thumbnail ${entry.id}`);
+	assert(await exists(previewPath), `Missing preview ${entry.id}`);
 	assert(await exists(fullPath), `Missing full image ${entry.id}`);
-	const metadata = await sharp(fullPath).metadata();
-	assert(metadata.width === entry.w, `Width mismatch for ${entry.id}`);
-	assert((metadata.pageHeight ?? metadata.height) === entry.h, `Height mismatch for ${entry.id}`);
+	for (const [variant, filePath, maxDimension] of [
+		["thumbnail", thumbPath, 640],
+		["preview", previewPath, 1280],
+		["full image", fullPath, 2048],
+	]) {
+		const metadata = await sharp(filePath).metadata();
+		const width = metadata.width ?? 0;
+		const height = metadata.pageHeight ?? metadata.height ?? 0;
+		assert(width > 0 && height > 0, `Unreadable ${variant} ${entry.id}`);
+		assert(
+			width <= maxDimension && height <= maxDimension,
+			`${variant} exceeds ${maxDimension}px for ${entry.id}`
+		);
+		assert(
+			Math.abs(entry.w / entry.h - width / height) < 0.01,
+			`${variant} aspect ratio mismatch for ${entry.id}`
+		);
+	}
 	if (entry.type === "video") {
 		assert(
 			await exists(path.join(mediaRoot, "video", `${entry.id}.mp4`)),
@@ -125,6 +144,7 @@ console.log(
 			years: yearCounts,
 			types: typeCounts,
 			thumbs: thumbFiles.length,
+			previews: previewFiles.length,
 			full: fullFiles.length,
 			videos: videoFiles.length,
 			videoHours: Number((totalVideoSeconds / 3600).toFixed(2)),

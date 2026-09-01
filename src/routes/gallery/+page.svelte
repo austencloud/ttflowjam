@@ -19,7 +19,6 @@
 		"c2ed9019c79b19e2",
 		"5df89b95173bdd9e",
 	];
-
 	const featured = new Map(featuredIds.map((id, index) => [id, index]));
 	const orderedMedia = [...manifest].sort((a, b) => {
 		const aRank = featured.get(a.id) ?? Number.POSITIVE_INFINITY;
@@ -30,55 +29,85 @@
 	const yearCounts = new Map(
 		years.map((year) => [year, manifest.filter((media) => media.year === year).length])
 	);
+	const BATCH_SIZE = 60;
 
 	let open = $state(false);
 	let currentIndex = $state(0);
 	let heroOrigin = $state<HeroOrigin | null>(null);
 	let selectedYear = $state<number | "all">("all");
+	let visibleCount = $state(BATCH_SIZE);
+	let loadMoreButton: HTMLButtonElement | null = $state(null);
+
 	const visibleMedia = $derived(
 		selectedYear === "all"
 			? orderedMedia
 			: orderedMedia.filter((media) => media.year === selectedYear)
 	);
-	function isVideo(media: { type?: string }) {
-		return media.type === "video";
-	}
-
 	const items: MediaItem[] = $derived(
-		visibleMedia.map((media, index) => ({
-			id: media.id,
-			type: isVideo(media) ? "video" : "image",
-			url: isVideo(media)
-				? `/gallery/media/video/${media.id}.mp4`
-				: `/gallery/media/full/${media.id}.webp`,
-			thumbnailUrl: `/gallery/media/thumb/${media.id}.webp`,
-			width: media.w,
-			height: media.h,
-			alt: `Taco Tuesday Flow Jam ${isVideo(media) ? "video" : "photo"} ${index + 1} from ${media.year}`,
-		}))
+		visibleMedia.map((media, index) => {
+			const video = media.type === "video";
+			const fullUrl = `/gallery/media/full/${media.id}.webp`;
+			const previewUrl = `/gallery/media/preview/${media.id}.webp`;
+			const thumbnailUrl = `/gallery/media/thumb/${media.id}.webp`;
+			return {
+				id: media.id,
+				type: video ? "video" : "image",
+				url: video ? `/gallery/media/video/${media.id}.mp4` : fullUrl,
+				thumbnailUrl,
+				previewUrl,
+				srcset: video ? undefined : `${thumbnailUrl} 640w, ${previewUrl} 1280w, ${fullUrl} 2048w`,
+				sizes: video ? undefined : "100vw",
+				width: media.w,
+				height: media.h,
+				alt: `Taco Tuesday Flow Jam ${video ? "video" : "photo"} ${index + 1} from ${media.year}`,
+			};
+		})
 	);
+	const renderedItems = $derived(items.slice(0, visibleCount));
+	const hasMore = $derived(renderedItems.length < items.length);
+
+	$effect(() => {
+		if (!loadMoreButton || !hasMore) return;
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					loadMore();
+				}
+			},
+			{ rootMargin: "600px 0px" }
+		);
+		observer.observe(loadMoreButton);
+		return () => observer.disconnect();
+	});
 
 	function showYear(year: number | "all") {
 		selectedYear = year;
+		visibleCount = BATCH_SIZE;
 		currentIndex = 0;
 		heroOrigin = null;
+		open = false;
+	}
+
+	function handleYearChange(event: Event) {
+		const value = (event.currentTarget as HTMLSelectElement).value;
+		showYear(value === "all" ? "all" : Number(value));
+	}
+
+	function loadMore() {
+		visibleCount = Math.min(items.length, visibleCount + BATCH_SIZE);
 	}
 
 	function openAt(index: number, event: MouseEvent) {
 		const item = items[index];
-		if (!item) {
-			return;
-		}
-
+		if (!item) return;
 		heroOrigin = {
 			rect: (event.currentTarget as HTMLElement).getBoundingClientRect(),
 			thumbnailUrl: item.thumbnailUrl,
+			previewUrl: item.previewUrl,
 		};
 		currentIndex = index;
 		open = true;
 	}
-
-	const featuredCount = featuredIds.length;
 </script>
 
 <PageMeta
@@ -94,76 +123,82 @@
 		<ActionLink href={siteDetails.albumUrl} external>Add photos to the shared album</ActionLink>
 	</header>
 
-	<div class="year-filter" role="group" aria-label="Filter gallery by year">
-		<button
-			class:active={selectedYear === "all"}
-			type="button"
-			aria-pressed={selectedYear === "all"}
-			onclick={() => showYear("all")}
-		>
-			All <span>{manifest.length}</span>
-		</button>
-		{#each years as year}
-			<button
-				class:active={selectedYear === year}
-				type="button"
-				aria-pressed={selectedYear === year}
-				onclick={() => showYear(year)}
-			>
-				{year} <span>{yearCounts.get(year)}</span>
-			</button>
-		{/each}
+	<div class="gallery-tools">
+		<label class="year-control">
+			<span>Year</span>
+			<span class="select-shell">
+				<select value={selectedYear} onchange={handleYearChange}>
+					<option value="all">All years ({manifest.length})</option>
+					{#each years as year}
+						<option value={year}>{year} ({yearCounts.get(year)})</option>
+					{/each}
+				</select>
+				<svg viewBox="0 0 20 20" aria-hidden="true">
+					<path d="m5 7.5 5 5 5-5" />
+				</svg>
+			</span>
+		</label>
+		<output aria-live="polite">
+			{items.length}
+			{items.length === 1 ? "memory" : "memories"}
+		</output>
 	</div>
 
-	{#snippet galleryItem(item: MediaItem, index: number)}
-		<li>
-			<button class="cell" onclick={(event) => openAt(index, event)} aria-label="View {item.alt}">
-				<img
-					src={item.thumbnailUrl}
-					alt=""
-					width={item.width}
-					height={item.height}
-					loading={index < 8 ? "eager" : "lazy"}
-					decoding="async"
-				/>
-				{#if item.type === "video"}
-					<span class="play-badge" aria-hidden="true">
-						<svg viewBox="0 0 24 24">
-							<path d="M8 5.5v13l10-6.5z" />
-						</svg>
-					</span>
-				{/if}
-			</button>
-		</li>
-	{/snippet}
-
-	{#if selectedYear === "all"}
-		<ul class="featured-grid" aria-label="Featured photos">
-			{#each items.slice(0, featuredCount) as item, index (item.id)}
-				{@render galleryItem(item, index)}
-			{/each}
-		</ul>
-	{/if}
-
-	<ul class:single={visibleMedia.length === 1} class="grid">
-		{#each items.slice(selectedYear === "all" ? featuredCount : 0) as item, index (item.id)}
-			{@render galleryItem(item, index + (selectedYear === "all" ? featuredCount : 0))}
+	<ul class:single={items.length === 1} class="grid" aria-label="Taco Tuesday memories">
+		{#each renderedItems as item, index (item.id)}
+			<li>
+				<button class="cell" onclick={(event) => openAt(index, event)} aria-label="View {item.alt}">
+					<img
+						src={item.thumbnailUrl}
+						alt=""
+						width={item.width}
+						height={item.height}
+						loading={index < 12 ? "eager" : "lazy"}
+						decoding="async"
+					/>
+					{#if item.type === "video"}
+						<span class="play-badge" aria-hidden="true">
+							<svg viewBox="0 0 24 24">
+								<path d="M8 5.5v13l10-6.5z" />
+							</svg>
+						</span>
+					{/if}
+				</button>
+			</li>
 		{/each}
 	</ul>
+
+	{#if hasMore}
+		<div class="more">
+			<button bind:this={loadMoreButton} type="button" onclick={loadMore}>
+				Show more
+				<span aria-hidden="true">{renderedItems.length} / {items.length}</span>
+			</button>
+		</div>
+	{/if}
 </div>
 
-<MediaSpotlight
-	{items}
-	bind:currentIndex
-	bind:open
-	{heroOrigin}
-	config={{ loop: true, autoplayVideo: false, chromeTimeout: 3000, mediaPadding: 24 }}
-	callbacks={{
-		onclose: () => {
-			heroOrigin = null;
-		},
-	}}
-/>
+<div class="spotlight-theme">
+	<MediaSpotlight
+		{items}
+		bind:currentIndex
+		bind:open
+		{heroOrigin}
+		config={{
+			loop: true,
+			autoplayVideo: false,
+			chromeTimeout: 0,
+			mediaPadding: 20,
+			showFilmstrip: true,
+			showArrows: true,
+		}}
+		callbacks={{
+			onclose: () => {
+				heroOrigin = null;
+			},
+		}}
+	/>
+</div>
 
 <style>
 	.page {
@@ -195,130 +230,145 @@
 		font-weight: 900;
 	}
 
-	.year-filter {
+	.gallery-tools {
 		display: flex;
-		gap: var(--space-2);
-		margin-inline: calc(var(--page-gutter) * -1);
-		margin-bottom: var(--space-7);
-		padding-inline: var(--page-gutter);
-		overflow-x: auto;
-		overflow-y: hidden;
-		scrollbar-width: thin;
-		scroll-snap-type: inline proximity;
+		align-items: end;
+		justify-content: space-between;
+		gap: var(--space-4);
+		margin-bottom: var(--space-5);
+		padding-bottom: var(--space-4);
+		border-bottom: var(--border-thin) solid var(--theme-stroke);
 	}
 
-	.year-filter button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+	.year-control {
+		display: grid;
 		gap: var(--space-2);
+		color: var(--color-text-muted);
+		font-size: var(--font-size-min);
+		font-weight: 780;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.select-shell {
+		display: grid;
+		position: relative;
+		grid-template-areas: "control";
+		align-items: center;
+		width: min(18rem, calc(100vw - (var(--page-gutter) * 2)));
+	}
+
+	select,
+	.select-shell svg {
+		grid-area: control;
+	}
+
+	select {
+		width: 100%;
 		min-height: var(--min-touch-target);
-		padding-inline: var(--space-4);
-		border: var(--border-thin) solid var(--theme-stroke);
-		border-radius: var(--radius-round);
+		padding: 0 var(--space-6) 0 var(--space-4);
+		appearance: none;
+		border: var(--border-thin) solid var(--theme-stroke-strong);
+		border-radius: var(--radius-medium);
 		background: var(--color-night-raised);
 		color: var(--color-text);
-		font-size: var(--text-small);
+		font: inherit;
+		font-size: var(--text-body);
 		font-weight: 800;
+		letter-spacing: 0;
+		text-transform: none;
 		cursor: pointer;
-		flex: 0 0 auto;
-		scroll-snap-align: start;
 		transition:
-			background var(--duration-fast) var(--ease-out),
 			border-color var(--duration-fast) var(--ease-out),
-			color var(--duration-fast) var(--ease-out);
+			background var(--duration-fast) var(--ease-out);
 	}
 
-	.year-filter button:hover {
-		border-color: var(--theme-accent);
+	select:hover,
+	select:focus-visible {
+		border-color: var(--theme-spark);
 		background: var(--theme-card-hover-bg);
 	}
 
-	.year-filter button.active {
-		border-color: var(--color-paper);
-		background: var(--color-paper);
-		color: var(--color-paper-ink);
+	.select-shell svg {
+		justify-self: end;
+		width: 1.25rem;
+		margin-right: var(--space-3);
+		fill: none;
+		stroke: var(--theme-spark);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 2;
+		pointer-events: none;
 	}
 
-	.year-filter span {
-		display: inline-grid;
-		min-width: 1.75rem;
-		height: 1.75rem;
-		place-items: center;
-		padding-inline: var(--space-2);
-		border-radius: var(--radius-round);
-		background: var(--color-night-soft);
-		color: var(--color-text);
-		font-size: var(--font-size-min);
-		line-height: 1;
-	}
-
-	.year-filter button.active span {
-		background: var(--color-paper-ink);
+	output {
+		padding-bottom: calc((var(--min-touch-target) - 1.4em) / 2);
+		color: var(--color-text-muted);
+		font-size: var(--text-small);
+		font-variant-numeric: tabular-nums;
+		font-weight: 700;
+		white-space: nowrap;
 	}
 
 	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--gallery-column), 100%), 1fr));
+		gap: var(--space-3);
 		margin: 0;
 		padding: 0;
-		column-gap: var(--space-3);
-		column-width: var(--gallery-column);
 		list-style: none;
-	}
-
-	.featured-grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: var(--space-3);
-		margin: 0 0 var(--space-3);
-		padding: 0;
-		list-style: none;
-	}
-
-	.featured-grid li,
-	.featured-grid .cell {
-		min-width: 0;
-		height: 100%;
-	}
-
-	.featured-grid img {
-		height: 100%;
-		aspect-ratio: 4 / 3;
-		object-fit: cover;
 	}
 
 	.grid.single {
 		width: min(30rem, 100%);
 		margin-inline: auto;
-		column-count: 1;
-		column-width: auto;
-	}
-
-	.grid li {
-		break-inside: avoid;
-		margin-bottom: var(--space-3);
+		grid-template-columns: 1fr;
 	}
 
 	.cell {
 		display: block;
 		position: relative;
 		width: 100%;
+		aspect-ratio: 1;
 		padding: 0;
 		overflow: hidden;
 		border: var(--border-thin) solid var(--theme-stroke);
 		border-radius: var(--radius-large);
-		background: var(--color-night-panel);
+		background:
+			linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--theme-led) 12%, transparent),
+				transparent 60%
+			),
+			var(--color-night-panel);
 		cursor: pointer;
-		transition: border-color var(--duration-fast) var(--ease-out);
+		transition:
+			border-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-fast) var(--ease-out),
+			box-shadow var(--duration-fast) var(--ease-out);
 	}
 
 	.cell:hover {
-		border-color: var(--theme-accent);
+		border-color: var(--theme-spark);
+		box-shadow: 0 0 1.2rem color-mix(in srgb, var(--theme-selection) 18%, transparent);
+		transform: translateY(-2px);
+	}
+
+	.cell:focus-visible {
+		outline: var(--border-medium) solid var(--theme-spark);
+		outline-offset: 3px;
 	}
 
 	.cell img {
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
+		object-fit: cover;
+		transition: transform var(--duration-normal) var(--ease-out);
+	}
+
+	.cell:hover img {
+		transform: scale(1.025);
 	}
 
 	.play-badge {
@@ -329,11 +379,11 @@
 		width: 2.75rem;
 		height: 2.75rem;
 		place-items: center;
-		border: var(--border-medium) solid var(--color-paper);
+		border: var(--border-medium) solid var(--theme-selection);
 		border-radius: var(--radius-round);
 		background: var(--color-photo-scrim);
-		color: var(--color-paper);
-		box-shadow: 0 0.25rem 0.8rem var(--color-shadow);
+		color: var(--theme-selection);
+		box-shadow: 0 0 1rem color-mix(in srgb, var(--theme-selection) 28%, transparent);
 	}
 
 	.play-badge svg {
@@ -342,17 +392,104 @@
 		fill: currentColor;
 	}
 
-	@media (min-width: 60rem) {
-		.featured-grid {
-			grid-template-columns: repeat(5, minmax(0, 1fr));
+	.more {
+		display: grid;
+		place-items: center;
+		min-height: 8rem;
+	}
+
+	.more button {
+		display: inline-flex;
+		min-height: var(--min-touch-target);
+		align-items: center;
+		gap: var(--space-3);
+		padding-inline: var(--space-5);
+		border: var(--border-thin) solid var(--theme-stroke-strong);
+		border-radius: var(--radius-medium);
+		background: var(--color-night-raised);
+		color: var(--color-text);
+		font-size: var(--text-body);
+		font-weight: 800;
+		cursor: pointer;
+		transition:
+			border-color var(--duration-fast) var(--ease-out),
+			background var(--duration-fast) var(--ease-out);
+	}
+
+	.more button:hover,
+	.more button:focus-visible {
+		border-color: var(--theme-spark);
+		background: var(--theme-card-hover-bg);
+	}
+
+	.more span {
+		color: var(--color-text-muted);
+		font-size: var(--font-size-min);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.spotlight-theme {
+		--spotlight-backdrop: #07070d;
+		--spotlight-arrow-size: clamp(48px, 2.8vw, 72px);
+		--spotlight-arrow-size-mobile: 48px;
+		--spotlight-arrow-bg: color-mix(in srgb, var(--color-night-panel) 88%, transparent);
+		--spotlight-arrow-bg-hover: color-mix(in srgb, var(--theme-led) 28%, var(--color-night-panel));
+		--spotlight-arrow-color: var(--theme-selection);
+		--spotlight-close-bg: color-mix(in srgb, var(--color-night-panel) 88%, transparent);
+		--spotlight-close-color: var(--color-text);
+		--spotlight-close-size: clamp(48px, 2.5vw, 68px);
+		--spotlight-counter-bg: color-mix(in srgb, var(--color-night-panel) 88%, transparent);
+		--spotlight-counter-color: var(--color-text);
+		--spotlight-filmstrip-active-border: var(--theme-selection);
+		--spotlight-filmstrip-height: clamp(80px, 4.5vw, 120px);
+		--spotlight-filmstrip-thumb-size: clamp(60px, 3.2vw, 92px);
+		--spotlight-error-bg: var(--color-night-panel);
+		--spotlight-error-color: var(--color-text);
+	}
+
+	@media (max-width: 40rem) {
+		.page {
+			padding-top: var(--space-5);
 		}
 
-		.year-filter {
-			justify-content: center;
-			flex-wrap: wrap;
-			margin-inline: 0;
-			padding-inline: 0;
-			overflow: visible;
+		header {
+			margin-bottom: var(--space-5);
+		}
+
+		.gallery-tools {
+			align-items: stretch;
+			flex-direction: column;
+			gap: var(--space-2);
+		}
+
+		.select-shell {
+			width: 100%;
+		}
+
+		output {
+			padding-bottom: 0;
+		}
+
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: var(--space-2);
+		}
+
+		.cell {
+			border-radius: var(--radius-medium);
+		}
+
+		.play-badge {
+			right: var(--space-2);
+			bottom: var(--space-2);
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+
+		.spotlight-theme {
+			--spotlight-filmstrip-height: 68px;
+			--spotlight-filmstrip-thumb-size: 48px;
+			--spotlight-chrome-padding-mobile: 10px;
 		}
 	}
 
@@ -373,9 +510,19 @@
 			margin-bottom: var(--space-3);
 			font-size: clamp(2.5rem, 11vh, var(--text-page));
 		}
+	}
 
-		.year-filter {
-			margin-bottom: var(--space-4);
+	@media (prefers-reduced-motion: reduce) {
+		.cell,
+		.cell img,
+		select,
+		.more button {
+			transition: none;
+		}
+
+		.cell:hover,
+		.cell:hover img {
+			transform: none;
 		}
 	}
 </style>

@@ -1,27 +1,13 @@
 import { error } from "@sveltejs/kit";
 import { dev } from "$app/environment";
+import { parseMediaByteRange } from "$lib/services/media-byte-range";
 import type { RequestHandler } from "./$types";
 
-const KEY_PATTERN = /^(thumb|full)\/[0-9a-f]{16}\.webp$|^video\/[0-9a-f]{16}\.mp4$/;
+const KEY_PATTERN = /^(thumb|preview|full)\/[0-9a-f]{16}\.webp$|^video\/[0-9a-f]{16}\.mp4$/;
 
 const CACHE_HEADERS = {
 	"cache-control": "public, max-age=31536000, immutable",
 };
-
-function parseRange(rangeHeader: string, size: number) {
-	const match = /^bytes=(\d*)-(\d*)$/.exec(rangeHeader);
-	if (!match) {
-		return null;
-	}
-
-	const start = match[1] ? Number(match[1]) : 0;
-	const end = match[2] ? Number(match[2]) : size - 1;
-	if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start > end || start >= size) {
-		return null;
-	}
-
-	return { start, end: Math.min(end, size - 1) };
-}
 
 function mediaHeaders(key: string) {
 	return {
@@ -49,7 +35,7 @@ export const GET: RequestHandler = async ({ params, platform, request }) => {
 			if (params.key.endsWith(".mp4")) {
 				const metadata = await stat(localPath);
 				if (rangeHeader) {
-					const range = parseRange(rangeHeader, metadata.size);
+					const range = parseMediaByteRange(rangeHeader, metadata.size);
 					if (!range) {
 						return new Response(null, {
 							status: 416,
@@ -91,7 +77,7 @@ export const GET: RequestHandler = async ({ params, platform, request }) => {
 			error(404, "Not found");
 		}
 
-		const range = parseRange(rangeHeader, metadata.size);
+		const range = parseMediaByteRange(rangeHeader, metadata.size);
 		if (!range) {
 			return new Response(null, {
 				status: 416,
