@@ -6,7 +6,12 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 const root = process.cwd();
-const mediaRoot = path.resolve(process.argv[2] ?? path.join(root, "harvest", "gallery-build"));
+const args = process.argv.slice(2);
+const videosOnly = args.includes("--videos-only");
+const videoStartArgument = args.find((argument) => argument.startsWith("--video-start="));
+const videoStart = Number(videoStartArgument?.split("=")[1] ?? 0);
+const mediaRootArgument = args.find((argument) => !argument.startsWith("--"));
+const mediaRoot = path.resolve(mediaRootArgument ?? path.join(root, "harvest", "gallery-build"));
 const manifest = JSON.parse(
 	await readFile(path.join(root, "src", "lib", "data", "gallery-manifest.json"), "utf8")
 );
@@ -37,8 +42,13 @@ const imageTasks = manifest.flatMap((entry) => [
 const videoTasks = manifest
 	.filter((entry) => entry.type === "video")
 	.map((entry) => createTask("video", entry.id, "mp4", "video/mp4"));
+const pendingVideoTasks = videoTasks.slice(videoStart);
 
-for (const task of [...imageTasks, ...videoTasks]) {
+if (!Number.isInteger(videoStart) || videoStart < 0 || videoStart > videoTasks.length) {
+	throw new Error(`Invalid --video-start value: ${videoStart}`);
+}
+
+for (const task of [...(videosOnly ? [] : imageTasks), ...pendingVideoTasks]) {
 	await requireFile(task.filePath);
 }
 
@@ -98,7 +108,11 @@ async function uploadBatch(tasks, concurrency, label) {
 	await Promise.all(Array.from({ length: concurrency }, worker));
 }
 
-console.log(`Uploading ${imageTasks.length} images and ${videoTasks.length} videos to R2.`);
-await uploadBatch(imageTasks, 12, "Images");
-await uploadBatch(videoTasks, 3, "Videos");
+console.log(
+	`Uploading ${videosOnly ? 0 : imageTasks.length} images and ${pendingVideoTasks.length} videos to R2.`
+);
+if (!videosOnly) {
+	await uploadBatch(imageTasks, 12, "Images");
+}
+await uploadBatch(pendingVideoTasks, 3, "Videos");
 console.log("Gallery upload complete.");

@@ -5,6 +5,7 @@
 	import ActionLink from "$lib/components/ActionLink.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
 	import { siteDetails } from "$lib/data/site-details";
+	import { galleryMediaUrl } from "$lib/services/gallery-media-url";
 	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
@@ -50,13 +51,13 @@
 	const items: MediaItem[] = $derived(
 		visibleMedia.map((media, index) => {
 			const video = media.type === "video";
-			const fullUrl = `/gallery/media/full/${media.id}.webp`;
-			const previewUrl = `/gallery/media/preview/${media.id}.webp`;
-			const thumbnailUrl = `/gallery/media/thumb/${media.id}.webp`;
+			const fullUrl = galleryMediaUrl(`/gallery/media/full/${media.id}.webp`);
+			const previewUrl = galleryMediaUrl(`/gallery/media/preview/${media.id}.webp`);
+			const thumbnailUrl = galleryMediaUrl(`/gallery/media/thumb/${media.id}.webp`);
 			return {
 				id: media.id,
 				type: video ? "video" : "image",
-				url: video ? `/gallery/media/video/${media.id}.mp4` : fullUrl,
+				url: video ? galleryMediaUrl(`/gallery/media/video/${media.id}.mp4`) : fullUrl,
 				thumbnailUrl,
 				previewUrl,
 				srcset: video ? undefined : `${thumbnailUrl} 640w, ${previewUrl} 1280w, ${fullUrl} 2048w`,

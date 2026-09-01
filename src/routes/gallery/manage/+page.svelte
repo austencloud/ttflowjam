@@ -6,6 +6,7 @@
 	import { untrack } from "svelte";
 	import ActionLink from "$lib/components/ActionLink.svelte";
 	import PageMeta from "$lib/components/PageMeta.svelte";
+	import { galleryMediaUrl } from "$lib/services/gallery-media-url";
 	import type { PageData } from "./$types";
 
 	type GalleryItem = PageData["media"][number];
@@ -48,13 +49,13 @@
 	const spotlightItems: MediaItem[] = $derived(
 		filteredMedia.map((item, index) => {
 			const video = item.type === "video";
-			const thumbnailUrl = `/gallery/manage/media/thumb/${item.id}.webp`;
-			const previewUrl = `/gallery/manage/media/preview/${item.id}.webp`;
-			const fullUrl = `/gallery/manage/media/full/${item.id}.webp`;
+			const thumbnailUrl = galleryMediaUrl(`/gallery/manage/media/thumb/${item.id}.webp`);
+			const previewUrl = galleryMediaUrl(`/gallery/manage/media/preview/${item.id}.webp`);
+			const fullUrl = galleryMediaUrl(`/gallery/manage/media/full/${item.id}.webp`);
 			return {
 				id: item.id,
 				type: video ? "video" : "image",
-				url: video ? `/gallery/manage/media/video/${item.id}.mp4` : fullUrl,
+				url: video ? galleryMediaUrl(`/gallery/manage/media/video/${item.id}.mp4`) : fullUrl,
 				thumbnailUrl,
 				previewUrl,
 				srcset: video ? undefined : `${thumbnailUrl} 640w, ${previewUrl} 1280w, ${fullUrl} 2048w`,
@@ -237,7 +238,7 @@
 						aria-label={`Open ${item.type === "video" ? "video" : "photo"}`}
 					>
 						<img
-							src={`/gallery/manage/media/thumb/${item.id}.webp`}
+							src={galleryMediaUrl(`/gallery/manage/media/thumb/${item.id}.webp`)}
 							alt=""
 							width={item.w}
 							height={item.h}
